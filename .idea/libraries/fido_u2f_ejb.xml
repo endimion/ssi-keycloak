@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="fido-u2f-ejb">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ssi-ear/target/fido-u2f/fido-u2f-ejb.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

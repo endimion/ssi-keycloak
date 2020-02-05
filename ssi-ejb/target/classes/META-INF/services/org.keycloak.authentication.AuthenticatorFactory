@@ -1,0 +1,4 @@
+gr.uagean.authenticators.BeforeSSIAuthenticatorFactory
+gr.uagean.authenticators.AfterEidasAuthenticatorFactory
+gr.uagean.authenticators.BeforeEidasAuthenticatorFactory
+gr.uagean.authenticators.AfterSSIAuthenticatorFactory

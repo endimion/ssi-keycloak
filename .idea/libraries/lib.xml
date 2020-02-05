@@ -1,0 +1,17 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/ssi-ear/target/fido-u2f/lib/spymemcached.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ssi-ear/target/fido-u2f/lib/spring-core.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ssi-ear/target/fido-u2f/lib/slf4j-api.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ssi-ear/target/fido-u2f/lib/spring-context.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ssi-ear/target/fido-u2f/lib/spring-aop.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ssi-ear/target/fido-u2f/lib/spring-beans.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ssi-ear/target/fido-u2f/lib/spring-jcl.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ssi-ear/target/fido-u2f/lib/spring-web.jar!/" />
+      <root url="jar://$PROJECT_DIR$/ssi-ear/target/fido-u2f/lib/spring-expression.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
