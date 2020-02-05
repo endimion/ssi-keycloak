@@ -1,0 +1,84 @@
+
+version: '3'
+
+volumes:
+  postgres_data:
+      driver: local
+services:
+  eidas-proxy:
+      image: endimion13/eidas-proxy:0.0.1b
+      environment:
+        SP_CONFIG_REPOSITORY: /configEidas/
+      volumes:
+        - /configFiles/configEidas:/configEidas 
+      ports:
+        - 8082:8081  
+      links:
+        - memcached
+
+  postgres:
+      image: postgres:9.6
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+      environment:
+        POSTGRES_DB: keycloak
+        POSTGRES_USER: keycloak
+        POSTGRES_PASSWORD: passcloak
+
+
+  keycloak:
+      image: djart/esmocloak:0.0.45
+      environment:
+        PROXY_ADDRESS_FORWARDING: 'true'
+        SP_CONFIG_REPOSITORY: /configEidas/
+        DB_VENDOR: POSTGRES
+        DB_ADDR: postgres
+        DB_DATABASE: keycloak
+        DB_USER: keycloak
+        DB_PASSWORD: passcloak
+        KEYCLOAK_USER: admin
+        KEYCLOAK_PASSWORD: Pa55w0rd
+        ENCR_SECRET: In0HDjEYcCQ5EAoLU7+5zANarIegCGss06uByCTlO5vQ==
+        ENCR_ENABLED: 'true'
+        ASYNC_SIGNATURE: 'true'
+        EXPIRES: 5
+        UPORTHELPER: http://uporthelper:3000
+        CALLBACK:  https://e482db27.ngrok.io/auth/realms/test/sp/uportResponse   
+        AUTH_PROCEED: http://localhost:8081/auth/realms/test/protocol/openid-connect/auth
+      ports:
+        - 8081:8080
+      volumes:
+        - /configFiles/keyConfig:/eidasConfig
+      depends_on:
+        - postgres
+        - memcached
+        - uporthelper  
+      links:
+        - memcached:memcached
+        - uporthelper:uporthelper
+#      network_mode: host        
+
+  memcached:
+    image: sameersbn/memcached:1.5.6-2
+    ports:
+      - 11111:11211
+
+  uporthelper:
+    image: endimion13/uport-verifier
+    environment:
+      PRODUCTION: "true"
+      KEYCLOAK: https://e482db27.ngrok.io
+    ports:
+      - 3000:3000
+
+  uportissuer:
+    image: endimion13/uport-issuer
+    environment:
+      NODE_ENV: "production"
+      ENDPOINT: http://localhost:4000
+      HTTPS_COOKIES: "false"
+      MEMCACHED_URL: memcached:11211
+      BASE_PATH: "issuer"
+    ports:
+      - 4000:3000
+
