@@ -12,6 +12,7 @@ import gr.uaegean.singleton.MemcacheUtils;
 import java.io.IOException;
 import net.spy.memcached.MemcachedClient;
 import org.jboss.logging.Logger;
+import org.keycloak.OAuth2Constants;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.Authenticator;
 import org.keycloak.models.KeycloakSession;
@@ -68,21 +69,63 @@ public class AfterSSIAuthenticator implements Authenticator {
             user.setEnabled(true);
 
             //TODO Add other data sources!!!
-            if (vc.getEidas() != null) {
-                user.setFirstName(vc.getEidas().getGivenName());
-                user.setLastName(vc.getEidas().getFamilyName());
-                user.setEmail(vc.getEidas().getPersonIdentifier() + "@uport");
+            if (vc.getSealEidas() != null && vc.getSealEidas().getEidas() != null) {
+                user.setFirstName(vc.getSealEidas().getEidas().getGivenName());
+                user.setLastName(vc.getSealEidas().getEidas().getFamilyName());
+                user.setEmail(vc.getSealEidas().getEidas().getPersonIdentifier() + "@uport");
                 user.setEmailVerified(true);
 
-                user.setSingleAttribute("eidas-familyName", vc.getEidas().getFamilyName());
-                user.setSingleAttribute("eidas-firstName", vc.getEidas().getGivenName());
-                user.setSingleAttribute("eidas-dateOfBirth", vc.getEidas().getDateOfBirth());
-                user.setSingleAttribute("eidas-personIdentifier", vc.getEidas().getPersonIdentifier());
-                user.setSingleAttribute("eidas-loa", vc.getEidas().getLoa());
+                user.setSingleAttribute("eidas-familyName", vc.getSealEidas().getEidas().getFamilyName());
+                user.setSingleAttribute("eidas-firstName", vc.getSealEidas().getEidas().getGivenName());
+                user.setSingleAttribute("eidas-dateOfBirth", vc.getSealEidas().getEidas().getDateOfBirth());
+                user.setSingleAttribute("eidas-personIdentifier", vc.getSealEidas().getEidas().getPersonIdentifier());
+                user.setSingleAttribute("eidas-loa", vc.getSealEidas().getEidas().getLoa());
 
             }
 
+            if (vc.getAmka() != null && vc.getAmka().getAmka() != null) {
+                if (user.getFirstName() == null) {
+                    user.setFirstName(vc.getAmka().getAmka().getLatinFirstName());
+                }
+                if (user.getLastName() == null) {
+                    user.setLastName(vc.getAmka().getAmka().getLatinLastName());
+                }
+                if (user.getEmail() == null) {
+                    user.setEmail(vc.getAmka().getAmka().getBirthDate() + "-" + vc.getAmka().getAmka().getLatinLastName() + "@uport");
+                }
+                user.setEmailVerified(true);
+                user.setSingleAttribute("amka-latinLastName", vc.getAmka().getAmka().getLatinLastName());
+                user.setSingleAttribute("amka-latinFirstName", vc.getAmka().getAmka().getLatinFirstName());
+                user.setSingleAttribute("amka-birthDate", vc.getAmka().getAmka().getBirthDate());
+                user.setSingleAttribute("amka-father", vc.getAmka().getAmka().getFather());
+                user.setSingleAttribute("amka-mother", vc.getAmka().getAmka().getMother());
+                user.setSingleAttribute("amka-mother", vc.getAmka().getAmka().getMother());
+                user.setSingleAttribute("amka-loa", vc.getAmka().getAmka().getLoa());
+            }
+
+            if (vc.getMitro() != null && vc.getMitro().getMitro() != null) {
+                user.setSingleAttribute("mitro-gender", vc.getMitro().getMitro().getGender());
+                user.setSingleAttribute("mitro-nationality", vc.getMitro().getMitro().getNationality());
+                user.setSingleAttribute("mitro-maritalStatus", vc.getMitro().getMitro().getMaritalStatus());
+            }
+
+            // grab oidc params
+            String response_type = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.RESPONSE_TYPE);
+            String client_id = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.CLIENT_ID);
+            String redirect_uri = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.REDIRECT_URI);
+            String state = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.STATE);
+            String scope = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.SCOPE);
+            //DEbug ensure we are getting the correct parameaters here
+            LOG.info("AFTER SSI Authenticator parameters!!!");
+            LOG.info(response_type);
+            LOG.info(client_id);
+            LOG.info(redirect_uri);
+            LOG.info(state);
+            LOG.info(scope);
+
             context.setUser(user);
+            LOG.info("AfterSSIAuthenticator Success!! user is set " + user.getUsername());
+
             context.success();
         } catch (IOException ex) {
             LOG.error(ex.getMessage());

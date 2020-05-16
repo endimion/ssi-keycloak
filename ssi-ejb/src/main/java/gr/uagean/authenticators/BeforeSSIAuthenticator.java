@@ -9,7 +9,9 @@ import gr.uaegean.pojo.KeycloakSessionTO;
 import gr.uaegean.services.PropertiesService;
 import gr.uaegean.singleton.MemcacheUtils;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.UUID;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import net.spy.memcached.MemcachedClient;
 import org.jboss.logging.Logger;
@@ -29,7 +31,7 @@ import org.springframework.web.client.RestTemplate;
 public class BeforeSSIAuthenticator extends AbstractSSIAuthenticator {
 
 //    protected ParameterService paramServ = new ParameterServiceImpl();
-    private static final Logger LOG = Logger.getLogger(BeforeEidasAuthenticator.class);
+    private static final Logger LOG = Logger.getLogger(BeforeSSIAuthenticator.class);
     private MemcachedClient mcc;
     private PropertiesService propServ;
 
@@ -74,30 +76,54 @@ public class BeforeSSIAuthenticator extends AbstractSSIAuthenticator {
             String redirect_uri = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.REDIRECT_URI);
             String state = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.STATE);
             String scope = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.SCOPE);
+
+            MultivaluedMap<String, String> params = context.getHttpRequest().getUri().getQueryParameters();
+            params.forEach((key, value) -> {
+                LOG.info("key::" + key + "|value::" + value);
+            });
+
             int expiresInSec = 300;
             //Transfer Object that will be cached
             KeycloakSessionTO ksTO = new KeycloakSessionTO(state, response_type, client_id, redirect_uri, state, scope);
-            LOG.info("will add with key:" + state + " object " + ksTO.toString());
+            LOG.info("BeforeSSIAuth will cache with key:" + state + " object " + ksTO.toString());
             mcc.add(ssiSessionId, expiresInSec, ksTO);
-
+//            LOG.info("the client scope is ::" + scope);
             //
-            context.getAuthenticationSession().getClientScopes().stream().forEach(scp -> {
-                LOG.info("this client: " + client_id + " has the following scopes requests:" + scp);
+            StringBuilder scopes = new StringBuilder();
+            Arrays.stream(scope.split(" ")).forEach(scp -> {
+                if (!scp.equals("openid")) {
+                    scopes.append(scp).append("=true&");
+                }
             });
 
             // GET the QR Code
             RestTemplate restTemplate = new RestTemplate();
             String uportHelperMsHost = StringUtils.isEmpty(this.propServ.getProp("UPORTHELPER")) ? "http://localhost:3000" : this.propServ.getProp("UPORTHELPER");
             String callback = StringUtils.isEmpty(this.propServ.getProp("CALLBACK")) ? "http://localhost:3000" : this.propServ.getProp("CALLBACK");
+            String callbackMobile = StringUtils.isEmpty(this.propServ.getProp("CALLBACK_MOBILE")) ? "http://localhost:3000"
+                    : this.propServ.getProp("CALLBACK_MOBILE");
 
-            String resourceUrl = uportHelperMsHost + "/connectionRequest?eidas=true&ssiSessionId=" + ssiSessionId + "&callback=" + callback;
+            String resourceUrl = uportHelperMsHost + "/connectionRequest?" + scopes.toString() + "ssiSessionId=" + ssiSessionId + "&callback=" + callback;
             ResponseEntity<String> response
                     = restTemplate.getForEntity(resourceUrl.trim(), String.class);
-//            LOG.info((" GOT THE FOLLOWING QR CODE " + response.getBody()));
+
+            resourceUrl = uportHelperMsHost + "/connectionRequestMobile?" + scopes.toString() + "ssiSessionId=" + ssiSessionId
+                    + "&callback=" + callbackMobile;
+
+            ResponseEntity<String> responseMobile
+                    = restTemplate.getForEntity(resourceUrl.trim(), String.class);
+
+            String ssEventSource = this.propServ.getProp("EVENT_SOURCE");
+            String responsePostEndpoint = this.propServ.getProp("SSI_REPLY_POST");
 
             Response challenge = context.form()
                     .setAttribute("qr", response.getBody())
+                    .setAttribute("mobile", responseMobile.getBody())
+                    .setAttribute("clientId", client_id)
+                    .setAttribute("scopes", scope.split(" "))
                     .setAttribute("ssiSessionId", ssiSessionId)
+                    .setAttribute("ssEventSource", ssEventSource)
+                    .setAttribute("responsePostEndpoint", responsePostEndpoint)
                     .createForm("ssi-request.ftl");
             LOG.info("will respond with force challenge");
 //force challenge means that it will not proceed to other authentication providers

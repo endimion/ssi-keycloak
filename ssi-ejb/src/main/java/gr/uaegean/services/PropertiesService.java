@@ -23,7 +23,6 @@ public class PropertiesService {
     private final static Logger LOG = LoggerFactory.getLogger(PropertiesService.class);
 
     public PropertiesService() throws IOException {
-//        LOG.info("init prop service");
         this.prop = new Properties();
         try {
             InputStream input = new FileInputStream("/ssiConfig/ssi.properties");
@@ -32,16 +31,9 @@ public class PropertiesService {
             LOG.error("file error");
             LOG.error(e.getMessage());
         }
-
-//        LOG.info("prop loaded");
-//        LOG.info("prop TEST " + this.prop.getProperty("test"));
     }
 
     public String getProp(String propertyName) {
-//        LOG.info("prop file value ");
-//        LOG.info(this.prop.getProperty(propertyName));
-//        LOG.info("env ");
-//        LOG.info(System.getenv(propertyName));
         return StringUtils.isEmpty(this.prop.getProperty(propertyName)) ? System.getenv(propertyName) : this.prop.getProperty(propertyName);
     }
 

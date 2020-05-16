@@ -1,6 +1,6 @@
 {
     "themes": [{
-        "name" : "eidas",
+        "name" : "ssi",
         "types": [ "login" ]
     }]
 }

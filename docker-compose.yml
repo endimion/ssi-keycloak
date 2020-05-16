@@ -43,8 +43,10 @@ services:
         ASYNC_SIGNATURE: 'true'
         EXPIRES: 5
         UPORTHELPER: http://uporthelper:3000
-        CALLBACK:  https://e482db27.ngrok.io/auth/realms/test/sp/uportResponse   
-        AUTH_PROCEED: http://localhost:8081/auth/realms/test/protocol/openid-connect/auth
+        CALLBACK:  http://localhost:8081/auth/realms/SSI/sp/uportResponse   
+        AUTH_PROCEED: http://localhost:8081/auth/realms/SSI/protocol/openid-connect/auth
+        EVENT_SOURCE: http://localhost:8081/auth/realms/SSI/sp/subscribe
+        SSI_REPLY_POST: https://localhost:8081/auth/realms/SSI/sp/proceed
       ports:
         - 8081:8080
       volumes:
@@ -67,7 +69,7 @@ services:
     image: endimion13/uport-verifier
     environment:
       PRODUCTION: "true"
-      KEYCLOAK: https://e482db27.ngrok.io
+      KEYCLOAK: http://localhost:8081/auth/realms/SSI/sp/ssiResponse
     ports:
       - 3000:3000
 
