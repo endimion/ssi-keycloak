@@ -9,6 +9,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import javax.enterprise.context.ApplicationScoped;
+import javax.enterprise.inject.Default;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -17,6 +19,8 @@ import org.springframework.util.StringUtils;
  *
  * @author nikos
  */
+@ApplicationScoped
+@Default
 public class PropertiesService {
 
     private final Properties prop;
@@ -25,7 +29,7 @@ public class PropertiesService {
     public PropertiesService() throws IOException {
         this.prop = new Properties();
         try {
-            InputStream input = new FileInputStream("/ssiConfig/ssi.properties");
+            InputStream input = new FileInputStream("/keyConfig/key.properties");
             this.prop.load(input);
         } catch (IOException e) {
             LOG.error("file error");

@@ -1,1 +1,6 @@
 gr.uagean.rest.SsiSpResourceProviderFactory
+gr.uagean.rest.MitroSpResourceProviderFactory
+gr.uagean.rest.AmkaSpResourceProviderFactory
+gr.uagean.rest.AcidSpResourceProviderFactory
+gr.uagean.rest.EidasResourceProviderFactory
+

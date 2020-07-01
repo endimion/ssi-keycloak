@@ -26,17 +26,19 @@ public class KeycloakSessionTO implements Serializable {
     private String clientRedirectUri;
     private String state;
     private String scope;
+    private String realm;
 
     public KeycloakSessionTO() {
     }
 
-    public KeycloakSessionTO(String session, String responseType, String clientId, String clientRedirectUri, String state, String scope) {
+    public KeycloakSessionTO(String session, String responseType, String clientId, String clientRedirectUri, String state, String scope, String realm) {
         this.session = session;
         this.responseType = responseType;
         this.clientId = clientId;
         this.clientRedirectUri = clientRedirectUri;
         this.state = state;
         this.scope = scope;
+        this.realm = realm;
     }
 
     public String getSession() {
@@ -87,9 +89,17 @@ public class KeycloakSessionTO implements Serializable {
         this.scope = scope;
     }
 
+    public String getRealm() {
+        return realm;
+    }
+
+    public void setRealm(String realm) {
+        this.realm = realm;
+    }
+
     @Override
     public String toString() {
-        return "KeycloakSessionTO{" + "session=" + session + ", responseType=" + responseType + ", clientId=" + clientId + ", clientRedirectUri=" + clientRedirectUri + ", state=" + state + ", scope=" + scope + '}';
+        return "KeycloakSessionTO{" + "session=" + session + ", responseType=" + responseType + ", clientId=" + clientId + ", clientRedirectUri=" + clientRedirectUri + ", state=" + state + ", scope=" + scope + ", realm=" + realm + '}';
     }
 
 }

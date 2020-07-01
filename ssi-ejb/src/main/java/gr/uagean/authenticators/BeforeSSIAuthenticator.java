@@ -7,7 +7,7 @@ package gr.uagean.authenticators;
 
 import gr.uaegean.pojo.KeycloakSessionTO;
 import gr.uaegean.services.PropertiesService;
-import gr.uaegean.singleton.MemcacheUtils;
+import gr.uaegean.singleton.MemcacheSingleton;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.UUID;
@@ -64,7 +64,7 @@ public class BeforeSSIAuthenticator extends AbstractSSIAuthenticator {
             KeycloakSession session = context.getSession();
             RealmModel realm = context.getRealm();
 
-            this.mcc = MemcacheUtils.getCache();
+            this.mcc = MemcacheSingleton.getCache();
             this.propServ = new PropertiesService();
 
             // create a new sessionId
@@ -84,8 +84,8 @@ public class BeforeSSIAuthenticator extends AbstractSSIAuthenticator {
 
             int expiresInSec = 300;
             //Transfer Object that will be cached
-            KeycloakSessionTO ksTO = new KeycloakSessionTO(state, response_type, client_id, redirect_uri, state, scope);
-            LOG.info("BeforeSSIAuth will cache with key:" + state + " object " + ksTO.toString());
+            KeycloakSessionTO ksTO = new KeycloakSessionTO(state, response_type, client_id, redirect_uri, state, scope, realm.getName());
+            LOG.info("BeforeSSIAuth will cache with key:" + ssiSessionId + " object " + ksTO.toString());
             mcc.add(ssiSessionId, expiresInSec, ksTO);
 //            LOG.info("the client scope is ::" + scope);
             //

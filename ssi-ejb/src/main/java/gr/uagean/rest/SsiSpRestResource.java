@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import gr.uaegean.pojo.KeycloakSessionTO;
 import gr.uaegean.pojo.UportResponse;
 import gr.uaegean.services.PropertiesService;
-import gr.uaegean.singleton.MemcacheUtils;
+import gr.uaegean.singleton.MemcacheSingleton;
+import gr.uaegean.singleton.MinEduSingleton;
+import gr.uaegean.utils.RealmUtils;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -46,6 +48,7 @@ public class SsiSpRestResource {
     private static Sse sse;
     private static SseBroadcaster SSE_BROADCASTER;
     private static OutboundSseEvent.Builder EVENT_BUILDER;
+    private static MinEduSingleton MINEDUSING;
 
     @SuppressWarnings("unused")
     private final AuthenticationManager.AuthResult auth;
@@ -80,7 +83,7 @@ public class SsiSpRestResource {
     public Response processUportResponse(@Context HttpServletRequest httpServletRequest,
             @Context HttpServletResponse httpServletResponse, UportResponse jwt, @QueryParam("ssiSessionId") String ssiSessionId) throws URISyntaxException, JsonProcessingException, IOException {
 
-        LOG.info("I got the message" + jwt.toString());
+//        LOG.info("I got the message" + jwt.toString());
         RestTemplate restTemplate = new RestTemplate();
         final String baseUrl = this.propServ.getProp("UPORTHELPER") + "/connectionResponse?ssiSessionId=" + ssiSessionId;
         URI uri = new URI(baseUrl);
@@ -122,7 +125,7 @@ public class SsiSpRestResource {
         // once authenticated they browser will  post a request containing that sessionID
         // which will be used to log the user in the session
         int expiresInSec = 180;
-        this.mcc = MemcacheUtils.getCache();
+        this.mcc = MemcacheSingleton.getCache();
         LOG.info("ssiResponse:: will add with key: claims" + String.valueOf(sessionId) + " the VC " + vcClaims);
         mcc.add("claims" + String.valueOf(sessionId), expiresInSec, vcClaims);
         if (SSE_BROADCASTER == null) {
@@ -144,18 +147,26 @@ public class SsiSpRestResource {
     @Path("proceed")
     public Response proceed(@FormParam("sessionId") String sessionId) throws IOException {
 
+        LOG.info("transformClaimsToIDCResponse!!!");
+        LOG.info("I got session:" + sessionId);
+        // retrieve from the cache the client attributes
+        this.mcc = MemcacheSingleton.getCache();
+        if (this.mcc.get(sessionId) == null) {
+            LOG.error("ERROR:: for sessionId" + sessionId + " parameters cached where null");
+        }
+
+        KeycloakSessionTO ksTo = (KeycloakSessionTO) this.mcc.get(sessionId);
+        LOG.info("proceed:: " + ksTo.toString());
+
         // see also keycloak OIDCLoginProtocolc lass method authenticated
         OIDCResponseMode responseMode = OIDCResponseMode.QUERY;
         String proceedWithAuthenticationUrl = this.propServ.getProp("AUTH_PROCEED"); //http://localhost:8080/auth/realms/test/protocol/openid-connect/auth
+        if (ksTo.getRealm() != null) {
+            proceedWithAuthenticationUrl = RealmUtils.updateRealm(proceedWithAuthenticationUrl, ksTo.getRealm());
+        }
+
         OIDCRedirectUriBuilder redirectUri = OIDCRedirectUriBuilder.fromUri(proceedWithAuthenticationUrl, responseMode);
-
-        this.mcc = MemcacheUtils.getCache();
-        // retrieve from the cache the client attributes
-
-        LOG.info("transformClaimsToIDCResponse!!!");
-        LOG.info("I got session:" + sessionId);
-        KeycloakSessionTO ksTo = (KeycloakSessionTO) mcc.get(sessionId);
-        LOG.info("proceed:: " + ksTo.toString());
+        LOG.info("the redirctUri is " + redirectUri.build().toString());
 
         redirectUri.addParam(OAuth2Constants.RESPONSE_TYPE, ksTo.getResponseType());
         redirectUri.addParam(OAuth2Constants.CLIENT_ID, ksTo.getClientId());
@@ -180,16 +191,21 @@ public class SsiSpRestResource {
             @Context UriInfo uriInfo) throws IOException, URISyntaxException {
 //            String access_token) throws IOException, URISyntaxException {
 
-        this.mcc = MemcacheUtils.getCache();
-        // see also keycloak OIDCLoginProtocolc lass method authenticated
-        OIDCResponseMode responseMode = OIDCResponseMode.QUERY;
-        String proceedWithAuthenticationUrl = this.propServ.getProp("AUTH_PROCEED");  //http://localhost:8080/auth/realms/test/protocol/openid-connect/auth
-        OIDCRedirectUriBuilder redirectUri = OIDCRedirectUriBuilder.fromUri(proceedWithAuthenticationUrl, responseMode);
-
+        this.mcc = MemcacheSingleton.getCache();
         // retrieve from the cache the client attributes
         KeycloakSessionTO ksTo = (KeycloakSessionTO) mcc.get(sessionId);
 //        LOG.info("accessToken " + access_token);
         LOG.info(ksTo.toString());
+
+        // see also keycloak OIDCLoginProtocolc lass method authenticated
+        OIDCResponseMode responseMode = OIDCResponseMode.QUERY;
+        String proceedWithAuthenticationUrl = this.propServ.getProp("AUTH_PROCEED");  //http://localhost:8080/auth/realms/test/protocol/openid-connect/auth
+        if (ksTo.getRealm() != null) {
+            proceedWithAuthenticationUrl = RealmUtils.updateRealm(proceedWithAuthenticationUrl, ksTo.getRealm());
+        }
+
+        OIDCRedirectUriBuilder redirectUri = OIDCRedirectUriBuilder.fromUri(proceedWithAuthenticationUrl, responseMode);
+        LOG.info("the redirctUri is " + redirectUri.build().toString());
 
         ObjectMapper mapper = new ObjectMapper();
         LOG.info("looking for creds-" + String.valueOf(sessionId));
@@ -219,39 +235,4 @@ public class SsiSpRestResource {
         return redirectUri.build();
     }
 
-//    @GET
-//    @Path("finalizeMobile/{ssiSessionId}/")
-//    public Response finalizeMobile(@PathParam("ssiSessionId") String sessionId,
-//            @Context HttpServletRequest httpServletRequest,
-//            @Context UriInfo uriInfo) throws IOException, URISyntaxException {
-//
-//        this.mcc = MemcacheUtils.getCache();
-//        // see also keycloak OIDCLoginProtocolc lass method authenticated
-//        OIDCResponseMode responseMode = OIDCResponseMode.QUERY;
-//        String proceedWithAuthenticationUrl = this.propServ.getProp("AUTH_PROCEED"); //http://localhost:8080/auth/realms/test/protocol/openid-connect/auth
-//        OIDCRedirectUriBuilder redirectUri = OIDCRedirectUriBuilder.fromUri(proceedWithAuthenticationUrl, responseMode);
-//
-//        // retrieve from the cache the client attributes
-//        KeycloakSessionTO ksTo = (KeycloakSessionTO) mcc.get(sessionId);
-////        LOG.info("accessToken " + access_token);
-//        LOG.info(ksTo.toString());
-//
-//        redirectUri.addParam(OAuth2Constants.RESPONSE_TYPE, ksTo.getResponseType());
-//        redirectUri.addParam(OAuth2Constants.CLIENT_ID, ksTo.getClientId());
-//        redirectUri.addParam(OAuth2Constants.REDIRECT_URI, ksTo.getClientRedirectUri());
-//        redirectUri.addParam(OAuth2Constants.STATE, ksTo.getState());
-//        redirectUri.addParam(OAuth2Constants.SCOPE, ksTo.getScope());
-//
-//        LOG.info("finalizeMobile:: RESPONSE_TYPE" + ksTo.getResponseType());
-//        LOG.info("finalizeMobile:: CLIENT_ID" + ksTo.getClientId());
-//        LOG.info("finalizeMobile:: REDIRECT_URI" + ksTo.getClientRedirectUri());
-//        LOG.info("finalizeMobile:: STATE" + ksTo.getState());
-//        LOG.info("finalizeMobile:: SCOPE" + ksTo.getScope());
-//
-//        redirectUri.addParam("sessionId", sessionId);
-//
-//        LOG.info("proceedMobile with SSI response concluded ok");
-//
-//        return redirectUri.build();
-//    }
 }

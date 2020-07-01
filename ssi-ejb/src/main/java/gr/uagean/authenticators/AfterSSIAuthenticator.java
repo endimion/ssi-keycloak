@@ -8,7 +8,7 @@ package gr.uagean.authenticators;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gr.uaegean.pojo.VerifiableCredential;
-import gr.uaegean.singleton.MemcacheUtils;
+import gr.uaegean.singleton.MemcacheSingleton;
 import java.io.IOException;
 import net.spy.memcached.MemcachedClient;
 import org.jboss.logging.Logger;
@@ -51,7 +51,7 @@ public class AfterSSIAuthenticator implements Authenticator {
                 return;
             }
 
-            this.mcc = MemcacheUtils.getCache();
+            this.mcc = MemcacheSingleton.getCache();
             LOG.info("looking for: " + "claims" + String.valueOf(sessionId));
             String claims = (String) this.mcc.get("claims" + String.valueOf(sessionId));
             LOG.info("GOT the following SSI claims " + claims);
@@ -107,6 +107,17 @@ public class AfterSSIAuthenticator implements Authenticator {
                 user.setSingleAttribute("mitro-gender", vc.getMitro().getMitro().getGender());
                 user.setSingleAttribute("mitro-nationality", vc.getMitro().getMitro().getNationality());
                 user.setSingleAttribute("mitro-maritalStatus", vc.getMitro().getMitro().getMaritalStatus());
+            }
+
+            if (vc.getErasmus() != null && vc.getErasmus().getMitro() != null) {
+                user.setSingleAttribute("eidas-familyName", vc.getErasmus().getMitro().getFamilyName());
+                user.setSingleAttribute("eidas-firstName", vc.getErasmus().getMitro().getGivenName());
+                user.setSingleAttribute("eidas-dateOfBirth", vc.getErasmus().getMitro().getDateOfBirth());
+                user.setSingleAttribute("eidas-personIdentifier", vc.getErasmus().getMitro().getPersonIdentifier());
+                user.setSingleAttribute("eidas-loa", vc.getErasmus().getMitro().getLoa());
+                user.setSingleAttribute("erasmus-expires", vc.getErasmus().getMitro().getExpires());
+                user.setSingleAttribute("erasmus-hostingInstitution", vc.getErasmus().getMitro().getHostingInstitution());
+                user.setSingleAttribute("erasmus-affiliation", vc.getErasmus().getMitro().getAffiliation());
             }
 
             // grab oidc params

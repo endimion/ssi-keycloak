@@ -15,7 +15,7 @@ import net.spy.memcached.MemcachedClient;
  *
  * @author nikos
  */
-public class MemcacheUtils {
+public class MemcacheSingleton {
 
     public static MemcachedClient mcc;
     public static boolean isInit = false;
@@ -23,16 +23,16 @@ public class MemcacheUtils {
     private static void initMemcache() throws IOException {
         MemcachedClient mcc = new MemcachedClient(new ConnectionFactoryBuilder().setDaemon(true).setFailureMode(FailureMode.Retry).build(),
                 AddrUtil.getAddresses("memcached:11211"));
-        MemcacheUtils.mcc = mcc;
-        MemcacheUtils.isInit = true;
+        MemcacheSingleton.mcc = mcc;
+        MemcacheSingleton.isInit = true;
     }
 
     public static MemcachedClient getCache() throws IOException {
-        if (!MemcacheUtils.isInit) {
+        if (!MemcacheSingleton.isInit) {
             initMemcache();
-            MemcacheUtils.isInit = true;
+            MemcacheSingleton.isInit = true;
         }
-        return MemcacheUtils.mcc;
+        return MemcacheSingleton.mcc;
     }
 
 }
