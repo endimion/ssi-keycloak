@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite tests="4" failures="0" name="TestClaimsMarshall" time="0.26" errors="0" skipped="0">
+<testsuite tests="4" failures="0" name="TestClaimsMarshall" time="0.683" errors="0" skipped="0">
   <properties>
     <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-8-openjdk-amd64/jre/lib/amd64"/>
@@ -63,8 +63,8 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase classname="TestClaimsMarshall" name="testSelfClaim" time="0.231"/>
-  <testcase classname="TestClaimsMarshall" name="testTaxisClaim" time="0.011"/>
-  <testcase classname="TestClaimsMarshall" name="testMarshallAMKA_MITRO" time="0.009"/>
-  <testcase classname="TestClaimsMarshall" name="testMarshallUnknown" time="0.009"/>
+  <testcase classname="TestClaimsMarshall" name="testSelfClaim" time="0.541"/>
+  <testcase classname="TestClaimsMarshall" name="testTaxisClaim" time="0.06"/>
+  <testcase classname="TestClaimsMarshall" name="testMarshallAMKA_MITRO" time="0.04"/>
+  <testcase classname="TestClaimsMarshall" name="testMarshallUnknown" time="0.042"/>
 </testsuite>

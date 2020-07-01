@@ -68,7 +68,7 @@ public class BeforeSSIFinancialAuthenticator extends AbstractSSIAuthenticator {
             String redirect_uri = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.REDIRECT_URI);
             String state = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.STATE);
             String scope = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.SCOPE);
-            String realm = StringUtils.isEmpty(this.propServ.getProp("PERSONAL_REALM")) ? "SSI-Personal" : this.propServ.getProp("PERSONAL_REALM");
+            String realm = StringUtils.isEmpty(this.propServ.getProp("FINANCIAL_REALM")) ? "SSI-FINANCIAL" : this.propServ.getProp("FINANCIAL_REALM");
 
             int expiresInSec = 3000;
             // create a new sessionId
@@ -85,11 +85,11 @@ public class BeforeSSIFinancialAuthenticator extends AbstractSSIAuthenticator {
             String callbackMobile = StringUtils.isEmpty(this.propServ.getProp("CALLBACK_MOBILE")) ? "http://localhost:3000"
                     : this.propServ.getProp("CALLBACK_MOBILE");
 
-            String resourceUrl = uportHelperMsHost + "/connectionRequest?" + "eidas=true&" + "ssiSessionId=" + ssiSessionId + "&callback=" + callback;
+            String resourceUrl = uportHelperMsHost + "/connectionRequest?" + "e1=true&" + "ssiSessionId=" + ssiSessionId + "&callback=" + callback;
             ResponseEntity<String> response
                     = restTemplate.getForEntity(resourceUrl.trim(), String.class);
 
-            resourceUrl = uportHelperMsHost + "/connectionRequestMobile?" + "eidas=true&" + "ssiSessionId=" + ssiSessionId
+            resourceUrl = uportHelperMsHost + "/connectionRequestMobile?" + "e1=true&" + "ssiSessionId=" + ssiSessionId
                     + "&callback=" + callbackMobile;
 
             ResponseEntity<String> responseMobile

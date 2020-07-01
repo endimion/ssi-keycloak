@@ -9,6 +9,8 @@ gr.uagean.authenticators.AfterSSITaxisAuthenticatorFactory
 gr.uagean.authenticators.BeforeSSISelfAuthenticatorFactory
 gr.uagean.authenticators.AfterSSISelfAuthenticatorFactory
 
+gr.uagean.authenticators.BeforeSSIFinancialAuthenticatorFactory
+gr.uagean.authenticators.AfterSSIFinancialAuthenticatorFactory
 
 gr.uagean.authenticators.BeforeMitroAuthenticatorFactory
 gr.uagean.authenticators.AfterMitroAuthenticatorFactory

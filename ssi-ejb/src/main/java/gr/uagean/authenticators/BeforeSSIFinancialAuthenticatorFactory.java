@@ -22,8 +22,8 @@ import org.keycloak.provider.ProviderConfigProperty;
  */
 public class BeforeSSIFinancialAuthenticatorFactory implements AuthenticatorFactory, ConfigurableAuthenticatorFactory {
 
-    public static final String PROVIDER_ID = "ssi-before-personal-authenticator";
-    private static final BeforeSSIPersonalAuthenticator SINGLETON = new BeforeSSIPersonalAuthenticator();
+    public static final String PROVIDER_ID = "ssi-before-fin-authenticator";
+    private static final BeforeSSIFinancialAuthenticator SINGLETON = new BeforeSSIFinancialAuthenticator();
 
     @Override
     public String getId() {
@@ -70,12 +70,12 @@ public class BeforeSSIFinancialAuthenticatorFactory implements AuthenticatorFact
 
     @Override
     public String getDisplayType() {
-        return "before-SSI Personal Authenticator";
+        return "before-SSI Fin Authenticator";
     }
 
     @Override
     public String getReferenceCategory() {
-        return "before-SSI Personal Authenticator";
+        return "before-SSI Fin Authenticator";
     }
 
     @Override

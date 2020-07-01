@@ -47,6 +47,20 @@ public class VerifiableCredential {
     @JsonProperty("SELF")
     private SelfRoute self;
 
+    @JsonProperty("E1")
+    private E1Route e1;
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    public static class E1Route {
+
+        @JsonProperty("E1")
+        private E1Claim e1;
+
+    }
+
     @Getter
     @Setter
     @NoArgsConstructor
@@ -104,6 +118,34 @@ public class VerifiableCredential {
 
         @JsonProperty("MITRO")
         private MITROClaim mitro;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    public static class E1Claim {
+
+        String salaries;
+        String pensionIncome;
+        String farmingActivity;
+        String freelanceActivity;
+        String rentIncome;
+        String unemploymentBenefit;
+        String otherBenefitsIncome;
+        String ekas;
+        String additionalIncomes;
+        String ergome;
+        String depositInterest;
+        String deposits;
+        String valueOfRealEstate;
+        String valueOfRealEstateInOtherCountries;
+        String valueOfOwnedVehicles;
+        String investments;
+        String householdComposition;
+        String name;
+        String surname;
+        String dateOfBirth;
     }
 
     @Getter
