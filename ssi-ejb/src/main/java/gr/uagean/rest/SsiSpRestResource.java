@@ -90,7 +90,7 @@ public class SsiSpRestResource {
         restTemplate.postForObject(uri, jwt, UportResponse.class);
         LOG.info("uport response sent to uporthelper");
 
-        return null;
+        return Response.ok().build();
     }
 
     @GET

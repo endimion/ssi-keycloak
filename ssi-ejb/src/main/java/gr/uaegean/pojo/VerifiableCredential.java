@@ -50,6 +50,19 @@ public class VerifiableCredential {
     @JsonProperty("E1")
     private E1Route e1;
 
+    @JsonProperty("EBILL")
+    private EBillRoute ebill;
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    public static class EBillRoute {
+
+        @JsonProperty("ebill")
+        private EBillClaim ebill;
+    }
+
     @Getter
     @Setter
     @NoArgsConstructor
@@ -118,6 +131,17 @@ public class VerifiableCredential {
 
         @JsonProperty("MITRO")
         private MITROClaim mitro;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    public static class EBillClaim {
+
+        String ownership;
+        String supplyType;
+        String meterNumber;
     }
 
     @Getter
@@ -200,6 +224,37 @@ public class VerifiableCredential {
         private String mothersNameLatin;
         private String gender;
         private String nationality;
+
+        @JsonProperty("householdComposition")
+        private HouseholdComposition[] household;
+
+        @JsonProperty("address")
+        private Address address;
+
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    public static class HouseholdComposition {
+
+        private String name;
+        private String relation;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    public static class Address {
+
+        private String street;
+        private String streetNumber;
+        @JsonProperty("PO")
+        private String po;
+        private String municipality;
+        private String prefecture;
     }
 
     @Getter

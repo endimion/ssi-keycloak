@@ -12,6 +12,10 @@ gr.uagean.authenticators.AfterSSISelfAuthenticatorFactory
 gr.uagean.authenticators.BeforeSSIFinancialAuthenticatorFactory
 gr.uagean.authenticators.AfterSSIFinancialAuthenticatorFactory
 
+gr.uagean.authenticators.BeforeSSIEbillAuthenticatorFactory
+gr.uagean.authenticators.AfterSSIEbillAuthenticatorFactory
+
+
 gr.uagean.authenticators.BeforeMitroAuthenticatorFactory
 gr.uagean.authenticators.AfterMitroAuthenticatorFactory
 gr.uagean.authenticators.BeforeAmkaAuthenticatorFactory
