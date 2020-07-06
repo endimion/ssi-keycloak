@@ -15,6 +15,9 @@ gr.uagean.authenticators.AfterSSIFinancialAuthenticatorFactory
 gr.uagean.authenticators.BeforeSSIEbillAuthenticatorFactory
 gr.uagean.authenticators.AfterSSIEbillAuthenticatorFactory
 
+gr.uagean.authenticators.BeforeSSIContactAuthenticatorFactory
+gr.uagean.authenticators.AfterSSIContactAuthenticatorFactory
+
 
 gr.uagean.authenticators.BeforeMitroAuthenticatorFactory
 gr.uagean.authenticators.AfterMitroAuthenticatorFactory

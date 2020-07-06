@@ -73,4 +73,16 @@ public class TestClaimsMarshall {
 
     }
 
+    @Test
+    public void testContact() throws IOException {
+        String test = "{\"CONTACT-DETAILS\":{\"contact\":{\"email\":\"triantafyllou.ni@gmail.com\",\"landline\":\"210778635X\",\"iban\":\"xxxxxxxxx\",\"mobilePhone\":\"69438087X\",\"source\":\"contact\",\"loa\":\"low\"}}},\"vc\":[\"/ipfs/QmNbicKYQKCsc7GMXSSJMpvJSYgeQ9K2tH15EnbxTydxfQ\"],\"iss\":\"did:ethr:0xd502a2c71e8c90e82500a70683f75de38d57dd9f\",\"jwt\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NkstUiJ9.eyJpYXQiOjE1OTM3OTExNjQsImV4cCI6MTU5NjM4MzE2NCwic3ViIjoiZGlkOmV0aHI6MHg3MWM2N2U3YTlkMGUyMDNhY2E3MzA1YWQ3YWIzOTg1M2RkM2U1Y2MwIiwiY2xhaW0iOnsiQ09OVEFDVC1ERVRBSUxTIjp7ImNvbnRhY3QiOnsiZW1haWwiOiJ0cmlhbnRhZnlsbG91Lm5pQGdtYWlsLmNvbSIsImxhbmRsaW5lIjoiMjEwNzc4NjM1WCIsImliYW4iOiJ4eHh4eHh4eHgiLCJtb2JpbGVQaG9uZSI6IjY5NDM4MDg3WCIsInNvdXJjZSI6ImNvbnRhY3QiLCJsb2EiOiJsb3cifX19LCJ2YyI6WyIvaXBmcy9RbU5iaWNLWVFLQ3NjN0dNWFNTSk1wdkpTWWdlUTlLMnRIMTVFbmJ4VHlkeGZRIl0sImlzcyI6ImRpZDpldGhyOjB4ZDUwMmEyYzcxZThjOTBlODI1MDBhNzA2ODNmNzVkZTM4ZDU3ZGQ5ZiJ9.L2XKFLeCQYqzCSM-Hq1-2qYRf9TgPGyTPkXWfacb0tXjraKD-23cnj7-yfcwxGiD_ISzfs9LJ-c5-7mRGvxNTAE\"}],\"invalid\":[]}";
+        ObjectMapper mapper = new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        VerifiableCredential vc = mapper.readValue(test, VerifiableCredential.class);
+        System.out.println(vc.toString());
+        assertEquals(vc.getContact().getContact().getIban(), "xxxxxxxxx");
+
+    }
+
 }

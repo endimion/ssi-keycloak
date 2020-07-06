@@ -53,6 +53,19 @@ public class VerifiableCredential {
     @JsonProperty("EBILL")
     private EBillRoute ebill;
 
+    @JsonProperty("CONTACT-DETAILS")
+    private ContactRoute contact;
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    public static class ContactRoute {
+
+        @JsonProperty("contact")
+        private ContactClaim contact;
+    }
+
     @Getter
     @Setter
     @NoArgsConstructor
@@ -131,6 +144,18 @@ public class VerifiableCredential {
 
         @JsonProperty("MITRO")
         private MITROClaim mitro;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    public static class ContactClaim {
+
+        String email;
+        String landline;
+        String iban;
+        String mobilePhone;
     }
 
     @Getter
