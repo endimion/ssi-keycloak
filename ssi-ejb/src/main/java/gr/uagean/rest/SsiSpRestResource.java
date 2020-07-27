@@ -69,12 +69,9 @@ public class SsiSpRestResource {
     public SsiSpRestResource(KeycloakSession session) {
         this.session = session;
         this.auth = new AppAuthManager().authenticateBearerToken(session, session.getContext().getRealm());
-        try {
-            this.propServ = new PropertiesService();
-        } catch (IOException ex) {
-            LOG.error("error reading properties");
-            LOG.error(ex.getMessage());
-        }
+
+        this.propServ = new PropertiesService();
+
     }
 
     @POST
@@ -84,6 +81,7 @@ public class SsiSpRestResource {
             @Context HttpServletResponse httpServletResponse, UportResponse jwt, @QueryParam("ssiSessionId") String ssiSessionId) throws URISyntaxException, JsonProcessingException, IOException {
 
 //        LOG.info("I got the message" + jwt.toString());
+        LOG.info("GOT uportResponse");
         RestTemplate restTemplate = new RestTemplate();
         final String baseUrl = this.propServ.getProp("UPORTHELPER") + "/connectionResponse?ssiSessionId=" + ssiSessionId;
         URI uri = new URI(baseUrl);

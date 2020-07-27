@@ -142,7 +142,7 @@ public class VerifiableCredential {
     @ToString
     public static class MITRO {
 
-        @JsonProperty("MITRO")
+        @JsonProperty("mitro")
         private MITROClaim mitro;
     }
 
@@ -211,6 +211,9 @@ public class VerifiableCredential {
         String luxury;
         String none;
         String employed;
+        String participateFead;
+        String feadProvider;
+        String employmentStatus;
 
     }
 
@@ -326,6 +329,9 @@ public class VerifiableCredential {
         private String maritalStatus;
         private String loa;
         private String source;
+        private String parenthood;
+        private String custody;
+        private String additionalAdults;
     }
 
     @Getter

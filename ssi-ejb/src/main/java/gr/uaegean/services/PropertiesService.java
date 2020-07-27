@@ -26,14 +26,14 @@ public class PropertiesService {
     private final Properties prop;
     private final static Logger LOG = LoggerFactory.getLogger(PropertiesService.class);
 
-    public PropertiesService() throws IOException {
+    public PropertiesService() {
         this.prop = new Properties();
         try {
             InputStream input = new FileInputStream("/keyConfig/key.properties");
             this.prop.load(input);
         } catch (IOException e) {
-            LOG.error("file error");
-            LOG.error(e.getMessage());
+            LOG.error("reading properties only form memory file error");
+//            LOG.error(e.getMessage());
         }
     }
 

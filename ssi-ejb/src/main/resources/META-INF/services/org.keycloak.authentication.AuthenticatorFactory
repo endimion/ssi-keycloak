@@ -19,6 +19,9 @@ gr.uagean.authenticators.BeforeSSIContactAuthenticatorFactory
 gr.uagean.authenticators.AfterSSIContactAuthenticatorFactory
 
 
+gr.uagean.authenticators.BeforeSSIMitroAuthenticatorFactory
+gr.uagean.authenticators.AfterSSIMitroAuthenticatorFactory
+
 gr.uagean.authenticators.BeforeMitroAuthenticatorFactory
 gr.uagean.authenticators.AfterMitroAuthenticatorFactory
 gr.uagean.authenticators.BeforeAmkaAuthenticatorFactory
@@ -27,3 +30,7 @@ gr.uagean.authenticators.BeforeAcIDAuthenticatorFactory
 gr.uagean.authenticators.AfterAcIDAuthenticatorFactory
 gr.uagean.authenticators.BeforeEidasAuthenticatorFactory
 gr.uagean.authenticators.AfterEidasAuthenticatorFactory
+
+
+gr.uagean.authenticators.BeforeTaxisAuthenticatorFactory
+gr.uagean.authenticators.AfterTaxisAuthenticatorFactory

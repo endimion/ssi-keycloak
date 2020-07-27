@@ -11,7 +11,6 @@ import gr.uaegean.pojo.VerifiableCredential;
 import gr.uaegean.singleton.MemcacheSingleton;
 import java.io.IOException;
 import net.spy.memcached.MemcachedClient;
-import org.jboss.logging.Logger;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.Authenticator;
@@ -19,6 +18,8 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 import org.keycloak.models.utils.KeycloakModelUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
@@ -28,7 +29,7 @@ import org.springframework.util.StringUtils;
 public class AfterSSISelflAuthenticator implements Authenticator {
 
 //    protected ParameterService paramServ = new ParameterServiceImpl();
-    private static Logger LOG = Logger.getLogger(AfterSSISelflAuthenticator.class);
+    private static Logger LOG = LoggerFactory.getLogger(AfterSSISelflAuthenticator.class);
 
     private ObjectMapper mapper;
     private MemcachedClient mcc;
@@ -79,8 +80,11 @@ public class AfterSSISelflAuthenticator implements Authenticator {
                 user.setSingleAttribute("self-monk", vc.getSelf().getSelf().getMonk());
                 user.setSingleAttribute("self-luxury", vc.getSelf().getSelf().getLuxury());
                 user.setSingleAttribute("self-employed", vc.getSelf().getSelf().getEmployed());
+                user.setSingleAttribute("self-employmentStatus", vc.getSelf().getSelf().getEmploymentStatus());
                 user.setSingleAttribute("self-oaedid", vc.getSelf().getSelf().getOaedid());
                 user.setSingleAttribute("self-oaedDate", vc.getSelf().getSelf().getOaedDate());
+                user.setSingleAttribute("self-participateFead", vc.getSelf().getSelf().getParticipateFead());
+                user.setSingleAttribute("self-feadProvider", vc.getSelf().getSelf().getFeadProvider());
 
             }
 
@@ -150,7 +154,7 @@ public class AfterSSISelflAuthenticator implements Authenticator {
     @Override
     public void action(AuthenticationFlowContext afc) {
         LOG.info("AFTER eidas actionImp called");
-        LOG.info(afc.getUser());
+//        LOG.info(afc.getUser());
         if (afc.getUser() != null) {
             afc.success();
         } else {

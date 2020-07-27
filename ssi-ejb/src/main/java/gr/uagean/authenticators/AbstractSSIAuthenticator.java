@@ -7,10 +7,11 @@ package gr.uagean.authenticators;
 
 import gr.uaegean.services.PropertiesService;
 import java.io.IOException;
-import org.jboss.logging.Logger;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.AuthenticationFlowError;
 import org.keycloak.authentication.Authenticator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author nikos
@@ -18,7 +19,7 @@ import org.keycloak.authentication.Authenticator;
 public abstract class AbstractSSIAuthenticator implements Authenticator {
 
 //    protected ParameterService paramServ = new ParameterServiceImpl();
-    private static final Logger LOG = Logger.getLogger(AbstractSSIAuthenticator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractSSIAuthenticator.class);
 
     protected PropertiesService propServ;
 

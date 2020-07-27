@@ -14,12 +14,13 @@ import java.util.UUID;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import net.spy.memcached.MemcachedClient;
-import org.jboss.logging.Logger;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
@@ -31,7 +32,7 @@ import org.springframework.web.client.RestTemplate;
 public class BeforeSSIAuthenticator extends AbstractSSIAuthenticator {
 
 //    protected ParameterService paramServ = new ParameterServiceImpl();
-    private static final Logger LOG = Logger.getLogger(BeforeSSIAuthenticator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BeforeSSIAuthenticator.class);
     private MemcachedClient mcc;
     private PropertiesService propServ;
 

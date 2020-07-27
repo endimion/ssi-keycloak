@@ -12,12 +12,13 @@ import java.io.IOException;
 import java.util.UUID;
 import javax.ws.rs.core.Response;
 import net.spy.memcached.MemcachedClient;
-import org.jboss.logging.Logger;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
@@ -26,7 +27,7 @@ import org.keycloak.models.UserModel;
 public class BeforeAmkaAuthenticator extends AbstractSSIAuthenticator {
 
 //    protected ParameterService paramServ = new ParameterServiceImpl();
-    private static final Logger LOG = Logger.getLogger(BeforeAmkaAuthenticator.class);
+    private static final Logger LOG = LoggerFactory.getLogger(BeforeAmkaAuthenticator.class);
     private MemcachedClient mcc;
     private PropertiesService propServ;
 

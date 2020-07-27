@@ -51,12 +51,8 @@ public class AmkaSpRestResource {
     public AmkaSpRestResource(KeycloakSession session) {
         this.session = session;
         this.auth = new AppAuthManager().authenticateBearerToken(session, session.getContext().getRealm());
-        try {
-            this.propServ = new PropertiesService();
-        } catch (IOException ex) {
-            LOG.error("error reading properties");
-            LOG.error(ex.getMessage());
-        }
+        this.propServ = new PropertiesService();
+
     }
 
     /**

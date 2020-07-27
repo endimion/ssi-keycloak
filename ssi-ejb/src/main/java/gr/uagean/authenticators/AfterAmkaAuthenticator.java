@@ -11,13 +11,14 @@ import gr.uaegean.pojo.MinEduAmkaResponse.AmkaResponse;
 import gr.uaegean.singleton.MemcacheSingleton;
 import java.io.IOException;
 import net.spy.memcached.MemcachedClient;
-import org.jboss.logging.Logger;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.Authenticator;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 import org.keycloak.models.utils.KeycloakModelUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
@@ -27,7 +28,7 @@ import org.springframework.util.StringUtils;
 public class AfterAmkaAuthenticator implements Authenticator {
 
 //    protected ParameterService paramServ = new ParameterServiceImpl();
-    private static Logger LOG = Logger.getLogger(AfterAmkaAuthenticator.class);
+    private static Logger LOG = LoggerFactory.getLogger(AfterAmkaAuthenticator.class);
 
     private ObjectMapper mapper;
     private MemcachedClient mcc;
@@ -117,7 +118,7 @@ public class AfterAmkaAuthenticator implements Authenticator {
     @Override
     public void action(AuthenticationFlowContext afc) {
         LOG.info("AFTER eidas actionImp called");
-        LOG.info(afc.getUser());
+//        LOG.info(afc.getUser());
         if (afc.getUser() != null) {
             afc.success();
         } else {

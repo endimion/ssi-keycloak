@@ -63,7 +63,7 @@ public class TestClaimsMarshall {
     @Test
     public void testSelfClaim() throws IOException {
 
-        String test = "{\"did\":\"did:ethr:0x71c67e7a9d0e203aca7305ad7ab39853dd3e5cc0\",\"SELF\":{\"self\":{\"oaedid\":\"213\",\"oaedDate\":\"10/03/20\",\"personal\":\"none\",\"source\":\"self\",\"loa\":\"low\"}},\"verified\":[{\"iat\":1593512397,\"exp\":1596104397,\"sub\":\"did:ethr:0x71c67e7a9d0e203aca7305ad7ab39853dd3e5cc0\",\"claim\":{\"SELF\":{\"self\":{\"oaedid\":\"213\",\"oaedDate\":\"10/03/20\",\"personal\":\"none\",\"source\":\"self\",\"loa\":\"low\"}}},\"vc\":[\"/ipfs/QmNbicKYQKCsc7GMXSSJMpvJSYgeQ9K2tH15EnbxTydxfQ\"],\"iss\":\"did:ethr:0xd502a2c71e8c90e82500a70683f75de38d57dd9f\",\"jwt\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NkstUiJ9.eyJpYXQiOjE1OTM1MTIzOTcsImV4cCI6MTU5NjEwNDM5Nywic3ViIjoiZGlkOmV0aHI6MHg3MWM2N2U3YTlkMGUyMDNhY2E3MzA1YWQ3YWIzOTg1M2RkM2U1Y2MwIiwiY2xhaW0iOnsiU0VMRiI6eyJzZWxmIjp7Im9hZWRpZCI6IjIxMyIsIm9hZWREYXRlIjoiMTAvMDMvMjAiLCJwZXJzb25hbCI6Im5vbmUiLCJzb3VyY2UiOiJzZWxmIiwibG9hIjoibG93In19fSwidmMiOlsiL2lwZnMvUW1OYmljS1lRS0NzYzdHTVhTU0pNcHZKU1lnZVE5SzJ0SDE1RW5ieFR5ZHhmUSJdLCJpc3MiOiJkaWQ6ZXRocjoweGQ1MDJhMmM3MWU4YzkwZTgyNTAwYTcwNjgzZjc1ZGUzOGQ1N2RkOWYifQ.UuUXtTYGguFgWr75tzlCEFGBc6FaaDleBJPXfY7U85GQwlrSqv7Vfkz_XrDIftMBjLjHeclwoNXGV_QcfRtW6AA\"}],\"invalid\":[]}";
+        String test = "{\"did\":\"did:ethr:0x71c67e7a9d0e203aca7305ad7ab39853dd3e5cc0\",\"SELF\":{\"self\":{\"luxury\":\"false\",\"hospitalizedSpecific\":\"false\",\"none\":\"false\",\"hospitalized\":\"false\",\"personal\":\"none\",\"monk\":\"false\",\"loa\":\"low\",\"oaedDate\":\"10/03/20\",\"oaedid\":\"213\",\"feadProvider\":\"fead provider id\",\"source\":\"self\",\"employed\":true,\"employmentStatus\":\"employed\",\"participateFead\":true}},\"verified\":[{\"iat\":1594211016,\"exp\":1596803016,\"sub\":\"did:ethr:0x71c67e7a9d0e203aca7305ad7ab39853dd3e5cc0\",\"claim\":{\"SELF\":{\"self\":{\"employed\":true,\"oaedid\":\"213\",\"oaedDate\":\"10/03/20\",\"participateFead\":true,\"feadProvider\":\"fead provider id\",\"personal\":\"none\",\"hospitalized\":\"false\",\"hospitalizedSpecific\":\"false\",\"monk\":\"false\",\"luxury\":\"false\",\"none\":\"false\",\"employmentStatus\":\"employed\",\"source\":\"self\",\"loa\":\"low\"}}},\"vc\":[\"/ipfs/QmNbicKYQKCsc7GMXSSJMpvJSYgeQ9K2tH15EnbxTydxfQ\"],\"iss\":\"did:ethr:0xd502a2c71e8c90e82500a70683f75de38d57dd9f\",\"jwt\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NkstUiJ9.eyJpYXQiOjE1OTQyMTEwMTYsImV4cCI6MTU5NjgwMzAxNiwic3ViIjoiZGlkOmV0aHI6MHg3MWM2N2U3YTlkMGUyMDNhY2E3MzA1YWQ3YWIzOTg1M2RkM2U1Y2MwIiwiY2xhaW0iOnsiU0VMRiI6eyJzZWxmIjp7ImVtcGxveWVkIjp0cnVlLCJvYWVkaWQiOiIyMTMiLCJvYWVkRGF0ZSI6IjEwLzAzLzIwIiwicGFydGljaXBhdGVGZWFkIjp0cnVlLCJmZWFkUHJvdmlkZXIiOiJmZWFkIHByb3ZpZGVyIGlkIiwicGVyc29uYWwiOiJub25lIiwiaG9zcGl0YWxpemVkIjoiZmFsc2UiLCJob3NwaXRhbGl6ZWRTcGVjaWZpYyI6ImZhbHNlIiwibW9uayI6ImZhbHNlIiwibHV4dXJ5IjoiZmFsc2UiLCJub25lIjoiZmFsc2UiLCJlbXBsb3ltZW50U3RhdHVzIjoiZW1wbG95ZWQiLCJzb3VyY2UiOiJzZWxmIiwibG9hIjoibG93In19fSwidmMiOlsiL2lwZnMvUW1OYmljS1lRS0NzYzdHTVhTU0pNcHZKU1lnZVE5SzJ0SDE1RW5ieFR5ZHhmUSJdLCJpc3MiOiJkaWQ6ZXRocjoweGQ1MDJhMmM3MWU4YzkwZTgyNTAwYTcwNjgzZjc1ZGUzOGQ1N2RkOWYifQ.NIV_QEfc-koWAQIx3sok7oUXEJS8LciSTd4MPNTE8wmvE30jEguGyRYmo0DVdAR2JxOu_CEnq5KOwWE9ud3dzgE\"}],\"invalid\":[]}";
         ObjectMapper mapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
@@ -82,6 +82,18 @@ public class TestClaimsMarshall {
         VerifiableCredential vc = mapper.readValue(test, VerifiableCredential.class);
         System.out.println(vc.toString());
         assertEquals(vc.getContact().getContact().getIban(), "xxxxxxxxx");
+
+    }
+
+    @Test
+    public void testMitro() throws IOException {
+        String test = "{\"did\":\"did:ethr:0x71c67e7a9d0e203aca7305ad7ab39853dd3e5cc0\",\"MITRO\":{\"mitro\":{\"parenthood\":true,\"custody\":true,\"additionalAdults\":\"2\",\"source\":\"mitro\",\"loa\":\"low\"}},\"verified\":[{\"iat\":1594017849,\"exp\":1596609849,\"sub\":\"did:ethr:0x71c67e7a9d0e203aca7305ad7ab39853dd3e5cc0\",\"claim\":{\"MITRO\":{\"mitro\":{\"parenthood\":true,\"custody\":true,\"additionalAdults\":\"2\",\"source\":\"mitro\",\"loa\":\"low\"}}},\"vc\":[\"/ipfs/QmNbicKYQKCsc7GMXSSJMpvJSYgeQ9K2tH15EnbxTydxfQ\"],\"iss\":\"did:ethr:0xd502a2c71e8c90e82500a70683f75de38d57dd9f\",\"jwt\":\"eyJ0eXAiOiJKV1QiLCJhbGciOiJFUzI1NkstUiJ9.eyJpYXQiOjE1OTQwMTc4NDksImV4cCI6MTU5NjYwOTg0OSwic3ViIjoiZGlkOmV0aHI6MHg3MWM2N2U3YTlkMGUyMDNhY2E3MzA1YWQ3YWIzOTg1M2RkM2U1Y2MwIiwiY2xhaW0iOnsiTUlUUk8iOnsibWl0cm8iOnsicGFyZW50aG9vZCI6dHJ1ZSwiY3VzdG9keSI6dHJ1ZSwiYWRkaXRpb25hbEFkdWx0cyI6IjIiLCJzb3VyY2UiOiJtaXRybyIsImxvYSI6ImxvdyJ9fX0sInZjIjpbIi9pcGZzL1FtTmJpY0tZUUtDc2M3R01YU1NKTXB2SlNZZ2VROUsydEgxNUVuYnhUeWR4ZlEiXSwiaXNzIjoiZGlkOmV0aHI6MHhkNTAyYTJjNzFlOGM5MGU4MjUwMGE3MDY4M2Y3NWRlMzhkNTdkZDlmIn0.RKCBCtS20rlJrJcvYrxm5c59LA5g2johfzMHP0Dohx1pZYMjbDrPdj2shvpz70HnUEl-dUmlxbYT4jzMy4r1bgA\"}],\"invalid\":[]}";
+        ObjectMapper mapper = new ObjectMapper()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+        VerifiableCredential vc = mapper.readValue(test, VerifiableCredential.class);
+        System.out.println(vc.toString());
+        assertEquals(vc.getMitro().getMitro().getParenthood(), "true");
 
     }
 

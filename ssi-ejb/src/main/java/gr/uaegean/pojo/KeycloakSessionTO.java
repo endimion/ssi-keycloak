@@ -31,7 +31,8 @@ public class KeycloakSessionTO implements Serializable {
     public KeycloakSessionTO() {
     }
 
-    public KeycloakSessionTO(String session, String responseType, String clientId, String clientRedirectUri, String state, String scope, String realm) {
+    public KeycloakSessionTO(String session, String responseType, String clientId, String clientRedirectUri,
+            String state, String scope, String realm) {
         this.session = session;
         this.responseType = responseType;
         this.clientId = clientId;

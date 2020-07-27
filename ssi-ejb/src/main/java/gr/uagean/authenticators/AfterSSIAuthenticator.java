@@ -11,7 +11,6 @@ import gr.uaegean.pojo.VerifiableCredential;
 import gr.uaegean.singleton.MemcacheSingleton;
 import java.io.IOException;
 import net.spy.memcached.MemcachedClient;
-import org.jboss.logging.Logger;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.authentication.AuthenticationFlowContext;
 import org.keycloak.authentication.Authenticator;
@@ -19,6 +18,8 @@ import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
 import org.keycloak.models.utils.KeycloakModelUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 
 /**
@@ -28,7 +29,7 @@ import org.springframework.util.StringUtils;
 public class AfterSSIAuthenticator implements Authenticator {
 
 //    protected ParameterService paramServ = new ParameterServiceImpl();
-    private static Logger LOG = Logger.getLogger(AfterSSIAuthenticator.class);
+    private static Logger LOG = LoggerFactory.getLogger(AfterSSIAuthenticator.class);
 
     private ObjectMapper mapper;
     private MemcachedClient mcc;
@@ -120,6 +121,33 @@ public class AfterSSIAuthenticator implements Authenticator {
                 user.setSingleAttribute("erasmus-affiliation", vc.getErasmus().getMitro().getAffiliation());
             }
 
+            if (vc.getTaxisRoute() != null && vc.getTaxisRoute().getTaxis() != null) {
+                user.setFirstName(vc.getTaxisRoute().getTaxis().getFirstNameLatin());
+                user.setLastName(vc.getTaxisRoute().getTaxis().getLastNameLatin());
+                user.setEmail(vc.getTaxisRoute().getTaxis().getAfm() + "@uport");
+                user.setEmailVerified(true);
+                user.setSingleAttribute("taxis-familyName", vc.getTaxisRoute().getTaxis().getLastName());
+                user.setSingleAttribute("taxis-firstName", vc.getTaxisRoute().getTaxis().getFistName());
+                user.setSingleAttribute("taxis-firstNameLatin", vc.getTaxisRoute().getTaxis().getFirstNameLatin());
+                user.setSingleAttribute("taxis-familyNameLatin", vc.getTaxisRoute().getTaxis().getLastNameLatin());
+                user.setSingleAttribute("taxis-afm", vc.getTaxisRoute().getTaxis().getAfm());
+                user.setSingleAttribute("taxis-amka", vc.getTaxisRoute().getTaxis().getAmka());
+                user.setSingleAttribute("taxis-fathersName", vc.getTaxisRoute().getTaxis().getFathersName());
+                user.setSingleAttribute("taxis-fathersNameLatin", vc.getTaxisRoute().getTaxis().getFathersNameLatin());
+                user.setSingleAttribute("taxis-mothersName", vc.getTaxisRoute().getTaxis().getMothersName());
+                user.setSingleAttribute("taxis-mothersNameLatin", vc.getTaxisRoute().getTaxis().getMothersNameLatin());
+                user.setSingleAttribute("taxis-source", vc.getTaxisRoute().getTaxis().getSource());
+                user.setSingleAttribute("taxis-dateOfBirth", vc.getTaxisRoute().getTaxis().getDateOfBirth());
+                user.setSingleAttribute("taxis-gender", vc.getTaxisRoute().getTaxis().getGender());
+                user.setSingleAttribute("taxis-nationality", vc.getTaxisRoute().getTaxis().getNationality());
+                user.setSingleAttribute("taxis-household", mapper.writeValueAsString(vc.getTaxisRoute().getTaxis().getHousehold()));
+                user.setSingleAttribute("taxis-address-street", vc.getTaxisRoute().getTaxis().getAddress().getStreet());
+                user.setSingleAttribute("taxis-address-number", vc.getTaxisRoute().getTaxis().getAddress().getStreetNumber());
+                user.setSingleAttribute("taxis-address-po", vc.getTaxisRoute().getTaxis().getAddress().getPo());
+                user.setSingleAttribute("taxis-address-prefecture", vc.getTaxisRoute().getTaxis().getAddress().getPrefecture());
+                user.setSingleAttribute("taxis-address-municipality", vc.getTaxisRoute().getTaxis().getAddress().getMunicipality());
+            }
+
             // grab oidc params
             String response_type = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.RESPONSE_TYPE);
             String client_id = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.CLIENT_ID);
@@ -149,7 +177,7 @@ public class AfterSSIAuthenticator implements Authenticator {
     @Override
     public void action(AuthenticationFlowContext afc) {
         LOG.info("AFTER eidas actionImp called");
-        LOG.info(afc.getUser());
+//        LOG.info(afc.getUser());
         if (afc.getUser() != null) {
             afc.success();
         } else {
