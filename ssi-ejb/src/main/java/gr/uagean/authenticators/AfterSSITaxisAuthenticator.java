@@ -92,11 +92,15 @@ public class AfterSSITaxisAuthenticator implements Authenticator {
                 user.setSingleAttribute("taxis-gender", vc.getTaxisRoute().getTaxis().getGender());
                 user.setSingleAttribute("taxis-nationality", vc.getTaxisRoute().getTaxis().getNationality());
                 user.setSingleAttribute("taxis-household", mapper.writeValueAsString(vc.getTaxisRoute().getTaxis().getHousehold()));
-                user.setSingleAttribute("taxis-address-street", vc.getTaxisRoute().getTaxis().getAddress().getStreet());
-                user.setSingleAttribute("taxis-address-number", vc.getTaxisRoute().getTaxis().getAddress().getStreetNumber());
-                user.setSingleAttribute("taxis-address-po", vc.getTaxisRoute().getTaxis().getAddress().getPo());
-                user.setSingleAttribute("taxis-address-prefecture", vc.getTaxisRoute().getTaxis().getAddress().getPrefecture());
-                user.setSingleAttribute("taxis-address-municipality", vc.getTaxisRoute().getTaxis().getAddress().getMunicipality());
+                if (vc.getTaxisRoute() != null && vc.getTaxisRoute().getTaxis() != null
+                        && vc.getTaxisRoute().getTaxis().getAddress() != null) {
+                    user.setSingleAttribute("taxis-address-street", vc.getTaxisRoute().getTaxis().getAddress().getStreet());
+                    user.setSingleAttribute("taxis-address-number", vc.getTaxisRoute().getTaxis().getAddress().getStreetNumber());
+                    user.setSingleAttribute("taxis-address-po", vc.getTaxisRoute().getTaxis().getAddress().getPo());
+                    user.setSingleAttribute("taxis-address-prefecture", vc.getTaxisRoute().getTaxis().getAddress().getPrefecture());
+                    user.setSingleAttribute("taxis-address-municipality", vc.getTaxisRoute().getTaxis().getAddress().getMunicipality());
+                }
+
             }
 
             if (vc.getAmka() != null && vc.getAmka().getAmka() != null) {
