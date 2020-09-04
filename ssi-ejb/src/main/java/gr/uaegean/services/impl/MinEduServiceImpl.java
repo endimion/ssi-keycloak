@@ -21,6 +21,8 @@ import gr.uaegean.services.PropertiesService;
 import gr.uaegean.utils.TimestampUtils;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +48,7 @@ public class MinEduServiceImpl implements MinEduService {
     private final String minEduMitroPolitonEndpoint;
     private final String minEduQueryByAmkaEndpoint;
     private LocalDateTime accessTokenExpiration;
-    private Optional<String> activeToken;
+    private Optional<Map<String, OAuths>> activeTokensMap;
     private final String minEduQueryIdEndpoint;
 
     private final static Logger LOG = LoggerFactory.getLogger(MinEduServiceImpl.class);
@@ -62,29 +64,33 @@ public class MinEduServiceImpl implements MinEduService {
         this.minEduQueryByAmkaEndpoint = paramServ.getProp("MINEDU_QUERY_BY_AMKA"); //https://gateway.interoperability.gr/academicId/1.0.1/student/
         this.minEduQueryIdEndpoint = paramServ.getProp("MINEDU_QUERYID_URL");
         this.accessTokenExpiration = LocalDateTime.now();
-        this.activeToken = Optional.empty();
+        this.activeTokensMap = Optional.of(new HashMap());
     }
 
     @Override
-    public Optional<String> getAccessTokenByTokenType(String tokenType) throws HttpClientErrorException {
+    public Optional<String> getAccessTokenByTokenTypeEn(String tokenType) throws HttpClientErrorException {
         GrantRequest grantReq = new GrantRequest(minEduTokenUser, minEduTokenPass, minEduTokenGrantType);
         RestTemplate restTemplate = new RestTemplate();
         LOG.info("will get toke from theurl: " + minEduTokenUri + " for token Type " + tokenType);
         try {
-            if (activeToken.isPresent() && accessTokenExpiration.isAfter(LocalDateTime.now().plusSeconds(30))) {
-                LOG.info("MinEdu OAth token still alive " + activeToken.get());
-                return activeToken;
+            if (activeTokensMap.isPresent() && activeTokensMap.get().get(tokenType) != null && accessTokenExpiration.isAfter(LocalDateTime.now().plusSeconds(30))) {
+                LOG.info("MinEdu OAth token still alive " + activeTokensMap.get().get(tokenType));
+                return Optional.of(activeTokensMap.get().get(tokenType).getOauth().getAccessToken());
             } else {
-                LOG.info("will get new token ");
+//                LOG.info("will get new token ");
                 TokenResponse tokResp = restTemplate.postForObject(minEduTokenUri, grantReq, TokenResponse.class);
                 if (tokResp != null && tokResp.getSuccess().equals("true") && tokResp.getOauths() != null) {
+                    Arrays.stream(tokResp.getOauths()).forEach(token -> {
+                        activeTokensMap.get().put(token.getTokenTypeEN(), token);
+                    });
+
                     Optional<OAuths> oAuth = Arrays.stream(tokResp.getOauths()).filter(token -> {
                         return token.getTokenTypeEN().equals(tokenType);
                     }).findFirst();
+
                     if (oAuth.isPresent()) {
                         this.accessTokenExpiration = this.accessTokenExpiration.plusSeconds(oAuth.get().getOauth().getExpiresIn());
-                        this.activeToken = Optional.of(oAuth.get().getOauth().getAccessToken());
-                        return this.activeToken;
+                        return Optional.of(this.activeTokensMap.get().get(tokenType).getOauth().getAccessToken());
                     }
                 }
             }
@@ -98,26 +104,27 @@ public class MinEduServiceImpl implements MinEduService {
     public Optional<String> getAccessToken(String type) {
         GrantRequest grantReq = new GrantRequest(minEduTokenUser, minEduTokenPass, minEduTokenGrantType);
         RestTemplate restTemplate = new RestTemplate();
-        LOG.info("will get toke from theurl: " + minEduTokenUri);
         try {
-            if (activeToken.isPresent() && accessTokenExpiration.isAfter(LocalDateTime.now().plusSeconds(30))) {
-                LOG.info("MinEdu OAth token still alive " + activeToken.get());
-                return activeToken;
+            if (activeTokensMap.isPresent() && activeTokensMap.get().get(type) != null && accessTokenExpiration.isAfter(LocalDateTime.now().plusSeconds(30))) {
+                LOG.info("MinEdu OAth token still alive for " + type + " " + activeTokensMap.get().get(type).getOauth().getAccessToken());
+                return Optional.of(activeTokensMap.get().get(type).getOauth().getAccessToken());
             } else {
-                LOG.info("will get new token for " + type);
+                LOG.info("will get token from theurl: " + minEduTokenUri + " for token Type " + type);
                 TokenResponse tokResp = restTemplate.postForObject(minEduTokenUri, grantReq, TokenResponse.class);
+                if (tokResp != null && tokResp.getSuccess().equals("true") && tokResp.getOauths() != null) {
+                    Arrays.stream(tokResp.getOauths()).forEach(token -> {
+                        LOG.info("adding token " + token.getTokenType() + " the token " + token.getOauth().getAccessToken());
+                        activeTokensMap.get().put(token.getTokenType(), token);
+                    });
+                    Optional<OAuths> oAuth = Arrays.stream(tokResp.getOauths()).filter(token -> {
+                        return token.getTokenType().equals(type);
+                    }).findFirst();
 
-                Optional<OAuths> mitroToken = Arrays.stream(tokResp.getOauths()).filter(token -> {
-                    LOG.info(token.getTokenType());
-                    return token.getTokenType().equals(type);
-                }).findFirst();
-                LOG.info("token:: " + mitroToken.get().getOauth().getAccessToken());
-
-                if (tokResp != null && tokResp.getSuccess().equals("true") && mitroToken.isPresent()) {
-//                    LOG.info("retrieved token " + tokResp.getOauths()[0].getOauth().getAccessToken());
-                    this.accessTokenExpiration = this.accessTokenExpiration.plusSeconds(mitroToken.get().getOauth().getExpiresIn());
-                    this.activeToken = Optional.of(mitroToken.get().getOauth().getAccessToken());
-                    return this.activeToken;
+                    if (oAuth.isPresent()) {
+                        LOG.info("retrieved token ok " + oAuth.get().getOauth().getAccessToken());
+                        this.accessTokenExpiration = this.accessTokenExpiration.plusSeconds(oAuth.get().getOauth().getExpiresIn());
+                        return Optional.of(this.activeTokensMap.get().get(type).getOauth().getAccessToken());
+                    }
                 }
             }
         } catch (HttpClientErrorException e) {
@@ -128,17 +135,23 @@ public class MinEduServiceImpl implements MinEduService {
 
     @Override
     public Optional<AmkaResponse> getAmkaFullResponse(String amka, String surname) {
-        String minEduQueryIdUrl = this.minEduAmkaQueryEndpoint + "/" + amka + "/" + surname + "/extended";
         HttpHeaders requestHeaders = new HttpHeaders();
         Optional<String> accessToken = getAccessToken("Δεδομένα ΑΜΚΑ API");
         if (accessToken.isPresent()) {
             RestTemplate restTemplate = new RestTemplate();
             requestHeaders.add("Authorization", "Bearer " + accessToken.get());
             HttpEntity<?> entity = new HttpEntity<>(requestHeaders);
-            LOG.info("querying for amka " + amka + "with surname " + surname);
+            LOG.info("querying for amka " + amka + " with surname " + surname);
             try {
-                ResponseEntity<MinEduAmkaResponse> amkaResponseEntity = restTemplate.exchange(minEduQueryIdUrl, HttpMethod.GET, entity, MinEduAmkaResponse.class);
+                String supervisorusername = System.getenv("SUPERVISOR_NAME");
+                String supervisorpassword = System.getenv("SUPERVISOR_PASSWORD");
+                String minEduQueryIdUrl = this.minEduAmkaQueryEndpoint + "/" + amka + "/" + surname
+                        + "/extended?gdpruser=" + supervisorusername + "&gdprpass=" + supervisorpassword;
+
+                ResponseEntity<MinEduAmkaResponse> amkaResponseEntity = restTemplate.exchange(minEduQueryIdUrl, HttpMethod.GET, entity, MinEduAmkaResponse.class
+                );
                 MinEduAmkaResponse amkaResp = amkaResponseEntity.getBody();
+                LOG.info(amkaResp.toString());
                 return Optional.of(amkaResp.getResult());
             } catch (HttpClientErrorException e) {
                 LOG.error(e.getMessage());
@@ -165,7 +178,8 @@ public class MinEduServiceImpl implements MinEduService {
             requestHeaders.add("Authorization", "Bearer " + accessToken.get());
             HttpEntity<?> entity = new HttpEntity<>(requestHeaders);
             try {
-                ResponseEntity<MinEduCheckByAmkaResponse> queryResponse = restTemplate.exchange(requestUrl, HttpMethod.GET, entity, MinEduCheckByAmkaResponse.class);
+                ResponseEntity<MinEduCheckByAmkaResponse> queryResponse = restTemplate.exchange(requestUrl, HttpMethod.GET, entity, MinEduCheckByAmkaResponse.class
+                );
                 LOG.info("result " + queryResponse.getBody().getResult().getAcademicID());
                 MinEduLog logEntry = new MinEduLog(queryResponse.getBody().getServiceCallID(), selectedUniversityId, queryResponse.getBody().getTimestamp(), TimestampUtils.getIso8601Date(), esmoSessionId);
                 LOG.info("MinEduLog " + logEntry.toString());
@@ -195,7 +209,8 @@ public class MinEduServiceImpl implements MinEduService {
             HttpEntity<?> entity = new HttpEntity<>(requestHeaders);
             LOG.info("querying for academicId " + academicId);
             try {
-                ResponseEntity<MinEduResponse> queryId = restTemplate.exchange(minEduQueryIdUrl, HttpMethod.GET, entity, MinEduResponse.class);
+                ResponseEntity<MinEduResponse> queryId = restTemplate.exchange(minEduQueryIdUrl, HttpMethod.GET, entity, MinEduResponse.class
+                );
                 MinEduResponse qResp = queryId.getBody();
                 InspectionResult ir = qResp.getResult().getInspectionResult();
                 MinEduLog logEntry = new MinEduLog(qResp.getServiceCallID(), selectedUniversityId, qResp.getTimestamp(), TimestampUtils.getIso8601Date(), esmoSessionId);
@@ -234,7 +249,42 @@ public class MinEduServiceImpl implements MinEduService {
             LOG.info("querying for Βεβαίωση Οικογενειακής Κατάστασης for" + firstname + "with surname " + lastname);
             LOG.info("the url is:: " + minEduQueryIdUrl);
             try {
-                ResponseEntity<MinEduFamilyStatusResponse> familyStatusResponseEntity = restTemplate.exchange(minEduQueryIdUrl, HttpMethod.GET, entity, MinEduFamilyStatusResponse.class);
+                ResponseEntity<MinEduFamilyStatusResponse> familyStatusResponseEntity = restTemplate.exchange(minEduQueryIdUrl, HttpMethod.GET, entity, MinEduFamilyStatusResponse.class
+                );
+                MinEduFamilyStatusResponse familyStatusResp = familyStatusResponseEntity.getBody();
+                return Optional.of(familyStatusResp);
+            } catch (HttpClientErrorException e) {
+                LOG.error(e.getMessage());
+            }
+        }
+        LOG.error("no token found in response!");
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<MinEduFamilyStatusResponse> getBirthCertificateResponse(String firstname, String lastname, String fathername, String mothername, String birthdate, String supervisorusername, String supervisorpassword) {
+        StringBuilder urlBuilder = new StringBuilder();
+        urlBuilder.append(this.minEduMitroPolitonEndpoint)
+                .append(firstname).append("/")
+                .append(lastname).append("/")
+                .append(fathername).append("/")
+                .append(mothername).append("/")
+                .append(birthdate).append("?")
+                .append("supervisorusername=").append(supervisorusername).append("&")
+                .append("supervisorpassword=").append(supervisorpassword).append("&")
+                .append("servicename=").append("Βεβαίωση Γέννησης με ΑΜΚΑ");
+        String minEduQueryIdUrl = urlBuilder.toString();
+        HttpHeaders requestHeaders = new HttpHeaders();
+        Optional<String> accessToken = getAccessToken("Δεδομένα Μητρώου Πολιτών");
+        if (accessToken.isPresent()) {
+            RestTemplate restTemplate = new RestTemplate();
+            requestHeaders.add("Authorization", "Bearer " + accessToken.get());
+            HttpEntity<?> entity = new HttpEntity<>(requestHeaders);
+            LOG.info("querying for Βεβαίωση Βεβαίωση Γέννησης με ΑΜΚΑ for" + firstname + "with surname " + lastname);
+            LOG.info("the url is:: " + minEduQueryIdUrl);
+            try {
+                ResponseEntity<MinEduFamilyStatusResponse> familyStatusResponseEntity = restTemplate.exchange(minEduQueryIdUrl, HttpMethod.GET, entity, MinEduFamilyStatusResponse.class
+                );
                 MinEduFamilyStatusResponse familyStatusResp = familyStatusResponseEntity.getBody();
                 return Optional.of(familyStatusResp);
             } catch (HttpClientErrorException e) {

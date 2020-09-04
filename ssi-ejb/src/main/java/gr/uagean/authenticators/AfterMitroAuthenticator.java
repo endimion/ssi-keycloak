@@ -7,6 +7,8 @@ package gr.uagean.authenticators;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gr.uaegean.pojo.AmkaAndMitroResponse;
+import gr.uaegean.pojo.MinEduAmkaResponse;
 import gr.uaegean.pojo.MinEduFamilyStatusResponse;
 import gr.uaegean.pojo.MinEduFamilyStatusResponse.FamilyRecordsElement;
 import gr.uaegean.singleton.MemcacheSingleton;
@@ -51,11 +53,16 @@ public class AfterMitroAuthenticator implements Authenticator {
             }
             this.mcc = MemcacheSingleton.getCache();
             LOG.info("looking for: " + "user Mitro details" + String.valueOf(sessionId));
-            String minEduAmkaRespString = (String) this.mcc.get("mitro-" + String.valueOf(sessionId));
+            String bundledResponseStr = (String) this.mcc.get("mitro-" + String.valueOf(sessionId));
 
             ObjectMapper mapper = new ObjectMapper()
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            MinEduFamilyStatusResponse minEduFamResp = mapper.readValue(minEduAmkaRespString, MinEduFamilyStatusResponse.class);
+
+            AmkaAndMitroResponse bundled = mapper.readValue(bundledResponseStr, AmkaAndMitroResponse.class);
+
+            MinEduFamilyStatusResponse minEduFamResp = bundled.getFamRes();
+            MinEduAmkaResponse.AmkaResponse amkaRes = bundled.getAmkaRes();
+            LOG.info("got the following mitro-amka response: " + amkaRes.toString());
 
             if (!minEduFamResp.isSuccess()) {
                 throw new IOException("no record found in response, MinEduSuccess code in response was false");
@@ -78,6 +85,17 @@ public class AfterMitroAuthenticator implements Authenticator {
                 user.setLastName(record.getSurname());
                 user.setEmail(record.getEklspecialno() + "@mitro");
                 user.setEmailVerified(true);
+                if (record.getMarriagerank() != null) {
+                    user.setSingleAttribute("mitro-protectedMembers",
+                            String.valueOf(Integer.parseInt(minEduFamResp.getResult().getRecords()[0].getNumberOfFamilyMembers()) - 2));
+                    user.setSingleAttribute("mitro-parenthood", "false");
+                } else {
+                    if (Integer.parseInt(minEduFamResp.getResult().getRecords()[0].getNumberOfFamilyMembers()) - 1 > 0) {
+                        user.setSingleAttribute("mitro-parenthood", "true");
+                    }
+
+                }
+
                 user.setSingleAttribute("mitro-marriageactno", record.getMarriageactno());
                 user.setSingleAttribute("mitro-familyShare", record.getFamilyShare());
                 user.setSingleAttribute("mitro-firstname", record.getFirstname());
@@ -120,6 +138,21 @@ public class AfterMitroAuthenticator implements Authenticator {
                 user.setSingleAttribute("mitro-birthmuniccomm", record.getBirthmuniccomm());
                 user.setSingleAttribute("mitro-gainmunrecdate", record.getGainmunrecdate());
                 user.setSingleAttribute("mitro-grnatgaindate", record.getGrnatgaindate());
+
+                // amka check attributes
+                user.setSingleAttribute("amkaCheck-amkaCurrent", amkaRes.getAmkaCurrent());
+                user.setSingleAttribute("amkaCheck-birthCountry", amkaRes.getBirthCountry());
+                user.setSingleAttribute("amkaCheck-birthCountryCode", amkaRes.getBirthCountryCode());
+                user.setSingleAttribute("amkaCheck-birthDate", amkaRes.getBirthDate());
+                user.setSingleAttribute("amkaCheck-birthMunicipality", amkaRes.getBirthMunicipality());
+                user.setSingleAttribute("amkaCheck-citizenship", amkaRes.getCitizenship());
+                user.setSingleAttribute("amkaCheck-fatherEn", amkaRes.getFatherEN());
+                user.setSingleAttribute("amkaCheck-motherEn", amkaRes.getMotherEn());
+                user.setSingleAttribute("amkaCheck-idNum", amkaRes.getIdNum());
+                user.setSingleAttribute("amkaCheck-nameEn", amkaRes.getNameEn());
+                user.setSingleAttribute("amkaCheck-gender", amkaRes.getSex());
+                user.setSingleAttribute("amkaCheck-surnameEn", amkaRes.getSurnameCurEn());
+                user.setSingleAttribute("amkaCheck-taxId", amkaRes.getTid());
             }
 
             context.setUser(user);

@@ -68,7 +68,7 @@ public class BeforeMitroAuthenticator extends AbstractSSIAuthenticator {
             String state = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.STATE);
             String scope = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.SCOPE);
             int expiresInSec = 300;
-            String realm = "mitro";
+            String realm = "mitroPoliton";
             //Transfer Object that will be cached
             KeycloakSessionTO ksTO = new KeycloakSessionTO(state, response_type, client_id, redirect_uri, state, scope, realm);
 //            LOG.info("will add with key:" + state + " object " + ksTO.toString());

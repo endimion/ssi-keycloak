@@ -92,6 +92,11 @@
                                         <label class="col l1 s12" for="birthdate">Birth Date (4 digits):</label>
                                         <input class="col l7 s12"  name="birthdate" type="text" id="birthdate"/> 
                                     </div>
+                                    
+                                      <div class="row">
+                                        <label class="col l1 s12" for="amka">AMKA Number:</label>
+                                        <input class="col l7 s12"  name="amka" type="text" id="amka"/> 
+                                    </div>
             
                                     <input type="hidden" id="sessionId" name="sessionId" value=${sessionId} />
                                     <div class="row" id="buttons">
@@ -132,6 +137,7 @@
                let mothername= document.getElementById("mothername").value;
                let birthdate= document.getElementById("birthdate").value;
                let sessionId = document.getElementById("sessionId").value;
+               let amka = document.getElementById("amka").value;
                let xhttp = new XMLHttpRequest();
                console.log(firstname);
                xhttp.onreadystatechange = function() {
@@ -154,7 +160,7 @@
                 xhttp.open("POST", "${forward}", true);
                 xhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=UTF-8");
                 let postUrlData = encodeURI("firstname="+firstname+"&lastname="+lastname+"&fathername="+fathername+"&mothername="+mothername
-                    +"&birthdate="+birthdate+"&sessionId="+sessionId);
+                    +"&birthdate="+birthdate+"&sessionId="+sessionId +"&amka="+amka);
                 xhttp.send(postUrlData);
                    
             }

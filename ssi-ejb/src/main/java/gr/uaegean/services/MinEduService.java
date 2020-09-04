@@ -20,7 +20,7 @@ public interface MinEduService {
 
     public Optional<String> getAccessToken(String type) throws HttpClientErrorException;
 
-    public Optional<String> getAccessTokenByTokenType(String tokenType) throws HttpClientErrorException;
+    public Optional<String> getAccessTokenByTokenTypeEn(String tokenType) throws HttpClientErrorException;
 
     public Optional<InspectionResult> getInspectioResultByAcademicId(String academicId, String selectedUniversityId, String esmoSessionId) throws HttpClientErrorException;
 
@@ -44,5 +44,8 @@ public interface MinEduService {
     public Optional<MinEduFamilyStatusResponse> getFamilyStatusResponse(String firstname, String lastname,
             String fathername, String mothername, String birthdate, String supervisorusername, String supervisorpassword,
             String servicename);
+
+    public Optional<MinEduFamilyStatusResponse> getBirthCertificateResponse(String firstname, String lastname,
+            String fathername, String mothername, String birthdate, String supervisorusername, String supervisorpassword);
 
 }

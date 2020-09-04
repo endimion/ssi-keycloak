@@ -96,6 +96,11 @@ public class AfterSSIFinancialAuthenticator implements Authenticator {
                 user.setSingleAttribute("e1-name", vc.getE1().getE1().getName());
                 user.setSingleAttribute("e1-surname", vc.getE1().getE1().getSurname());
                 user.setSingleAttribute("e1-dateOfBirth", vc.getE1().getE1().getDateOfBirth());
+                user.setSingleAttribute("e1-municipality", vc.getE1().getE1().getMunicipality());
+                user.setSingleAttribute("e1-number", vc.getE1().getE1().getNumber());
+                user.setSingleAttribute("e1-po", vc.getE1().getE1().getPo());
+                user.setSingleAttribute("e1-prefecture", vc.getE1().getE1().getPrefecture());
+                user.setSingleAttribute("e1-street", vc.getE1().getE1().getStreet());
 
             }
 

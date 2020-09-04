@@ -69,11 +69,28 @@ public class AfterSSIMitroAuthenticator implements Authenticator {
             }
             user.setEnabled(true);
 
+//            LOG.info("got mitro parased to ");
+//            LOG.info(vc.getMitro().toString());
             if (vc.getMitro() != null && vc.getMitro().getMitro() != null) {
                 user.setEmail(vc.getDid() + "@uport");
                 user.setSingleAttribute("mitro-parenthood", vc.getMitro().getMitro().getParenthood());
                 user.setSingleAttribute("mitro-custody", vc.getMitro().getMitro().getCustody());
-                user.setSingleAttribute("mitro-additionalAdults", vc.getMitro().getMitro().getAdditionalAdults());
+                user.setSingleAttribute("mitro-additionalAdults", vc.getMitro().getMitro().getProtectedMembers());
+                user.setSingleAttribute("amka", vc.getMitro().getMitro().getAmka());
+                user.setSingleAttribute("surnameLatin", vc.getMitro().getMitro().getSurnameLatin());
+                user.setSingleAttribute("nameLatin", vc.getMitro().getMitro().getNameLatin());
+                user.setSingleAttribute("fatherLatin", vc.getMitro().getMitro().getFatherLatin());
+                user.setSingleAttribute("motherLatin", vc.getMitro().getMitro().getMotherLatin());
+                user.setSingleAttribute("nationality", vc.getMitro().getMitro().getNationality());
+                user.setSingleAttribute("maritalStatus", vc.getMitro().getMitro().getMaritalStatus());
+                user.setSingleAttribute("maritalStatus", vc.getMitro().getMitro().getMaritalStatus());
+                if (vc.getMitro().getMitro().getGender().equals("Άρρεν")) {
+                    user.setSingleAttribute("gender", "male");
+                } else {
+                    user.setSingleAttribute("gender", "female");
+                }
+
+                //maritalStatus
             }
 
             // grab oidc params

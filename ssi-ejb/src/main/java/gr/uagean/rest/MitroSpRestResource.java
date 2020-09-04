@@ -2,7 +2,9 @@ package gr.uagean.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gr.uaegean.pojo.AmkaAndMitroResponse;
 import gr.uaegean.pojo.KeycloakSessionTO;
+import gr.uaegean.pojo.MinEduAmkaResponse.AmkaResponse;
 import gr.uaegean.pojo.MinEduFamilyStatusResponse;
 import gr.uaegean.services.PropertiesService;
 import gr.uaegean.singleton.MemcacheSingleton;
@@ -88,6 +90,7 @@ public class MitroSpRestResource {
             @FormParam("fathername") String fathername,
             @FormParam("mothername") String mothername,
             @FormParam("birthdate") String birthdate,
+            @FormParam("amka") String amka,
             @FormParam("sessionId") String sessionId) throws URISyntaxException, JsonProcessingException, IOException {
         ObjectMapper mapper = new ObjectMapper();
         httpServletRequest.setCharacterEncoding("UTF-8");
@@ -101,8 +104,15 @@ public class MitroSpRestResource {
         Optional< MinEduFamilyStatusResponse> famStatus
                 = MINEDUSING.getService().getFamilyStatusResponse(firstname, lastname, fathername, mothername, birthdate,
                         supervisorusername, supervisorpassword, servicename);
-        if (famStatus.isPresent()) {
-            MemcacheSingleton.getCache().add("mitro-" + sessionId, 1000, mapper.writeValueAsString(famStatus.get()));
+
+        Optional<AmkaResponse> amkaResp = MINEDUSING.getService().getAmkaFullResponse(amka, lastname);
+
+        if (famStatus.isPresent() && amkaResp.isPresent()) {
+            LOG.info("MitroSpRest");
+            LOG.info(famStatus.toString());
+            AmkaAndMitroResponse bundledResponse = new AmkaAndMitroResponse(amkaResp.get(), famStatus.get());
+
+            MemcacheSingleton.getCache().add("mitro-" + sessionId, 1000, mapper.writeValueAsString(bundledResponse));
             LOG.info("will cahce with key: " + sessionId);
             return Response.status(Response.Status.OK).entity(sessionId).build();
         }
@@ -117,6 +127,7 @@ public class MitroSpRestResource {
         // see also keycloak OIDCLoginProtocolc lass method authenticated
         OIDCResponseMode responseMode = OIDCResponseMode.QUERY;
         String proceedWithAuthenticationUrl = this.propServ.getProp("MITRO_AUTH_PROCEED"); //http://localhost:8080/auth/realms/test/protocol/openid-connect/auth
+        LOG.info("will procceed to " + proceedWithAuthenticationUrl);
         this.mcc = MemcacheSingleton.getCache();
         // retrieve from the cache the origianl OIDC call  paramters
         KeycloakSessionTO ksTo = (KeycloakSessionTO) mcc.get(sessionId);
