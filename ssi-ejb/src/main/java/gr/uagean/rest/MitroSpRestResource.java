@@ -34,6 +34,7 @@ import org.keycloak.services.managers.AppAuthManager;
 import org.keycloak.services.managers.AuthenticationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 @ApplicationScoped
 public class MitroSpRestResource {
@@ -142,6 +143,9 @@ public class MitroSpRestResource {
         redirectUri.addParam(OAuth2Constants.STATE, ksTo.getState());
         redirectUri.addParam(OAuth2Constants.SCOPE, ksTo.getScope());
         redirectUri.addParam("sessionId", sessionId);
+        if (!StringUtils.isEmpty(ksTo.getNonce())) {
+            redirectUri.addParam("nonce", ksTo.getNonce());
+        }
         LOG.info("proceed concluded ok");
         return redirectUri.build();
     }

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gr.uaegean.pojo.VerifiableCredential;
 import gr.uaegean.singleton.MemcacheSingleton;
+import static gr.uaegean.utils.CredentialsUtils.getClaimsFromVerifiedArray;
 import java.io.IOException;
 import net.spy.memcached.MemcachedClient;
 import org.keycloak.OAuth2Constants;
@@ -59,13 +60,14 @@ public class AfterSSIFinancialAuthenticator implements Authenticator {
 
             ObjectMapper mapper = new ObjectMapper()
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            VerifiableCredential vc = mapper.readValue(claims, VerifiableCredential.class);
+            VerifiableCredential credential = mapper.readValue(claims, VerifiableCredential.class);
+            VerifiableCredential.VerifiedClaims vc = getClaimsFromVerifiedArray(credential);
 
             // since we are not storing the users we use as a username the did
-            UserModel user = KeycloakModelUtils.findUserByNameOrEmail(session, realm, vc.getDid());
+            UserModel user = KeycloakModelUtils.findUserByNameOrEmail(session, realm, credential.getDid());
             if (user == null) {
                 // since we are not storing the users we use as a username the did
-                user = session.users().addUser(realm, vc.getDid());
+                user = session.users().addUser(realm, credential.getDid());
             }
             user.setEnabled(true);
 
@@ -73,7 +75,7 @@ public class AfterSSIFinancialAuthenticator implements Authenticator {
             if (vc.getE1() != null && vc.getE1().getE1() != null) {
                 user.setFirstName(vc.getE1().getE1().getName());
                 user.setLastName(vc.getE1().getE1().getSurname());
-                user.setEmail(vc.getDid() + "@uport");
+                user.setEmail(credential.getDid() + "@uport");
                 user.setEmailVerified(true);
 
                 user.setSingleAttribute("e1-salaries", vc.getE1().getE1().getSalaries());
@@ -92,7 +94,7 @@ public class AfterSSIFinancialAuthenticator implements Authenticator {
                 user.setSingleAttribute("e1-valueOfRealEstateInOtherCountries", vc.getE1().getE1().getValueOfRealEstateInOtherCountries());
                 user.setSingleAttribute("e1-valueOfOwnedVehicles", vc.getE1().getE1().getValueOfOwnedVehicles());
                 user.setSingleAttribute("e1-investments", vc.getE1().getE1().getInvestments());
-                user.setSingleAttribute("e1-householdComposition", vc.getE1().getE1().getHouseholdComposition());
+                user.setSingleAttribute("e1-householdComposition", vc.getE1().getE1().getHousehold());
                 user.setSingleAttribute("e1-name", vc.getE1().getE1().getName());
                 user.setSingleAttribute("e1-surname", vc.getE1().getE1().getSurname());
                 user.setSingleAttribute("e1-dateOfBirth", vc.getE1().getE1().getDateOfBirth());
@@ -101,6 +103,9 @@ public class AfterSSIFinancialAuthenticator implements Authenticator {
                 user.setSingleAttribute("e1-po", vc.getE1().getE1().getPo());
                 user.setSingleAttribute("e1-prefecture", vc.getE1().getE1().getPrefecture());
                 user.setSingleAttribute("e1-street", vc.getE1().getE1().getStreet());
+                user.setSingleAttribute("e1-credential-id", vc.getId());
+                user.setSingleAttribute("iat", credential.getVerified()[0].getIat());
+                user.setSingleAttribute("exp", credential.getVerified()[0].getExp());
 
             }
 

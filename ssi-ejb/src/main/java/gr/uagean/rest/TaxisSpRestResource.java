@@ -27,6 +27,7 @@ import org.keycloak.services.managers.AppAuthManager;
 import org.keycloak.services.managers.AuthenticationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 @ApplicationScoped
 public class TaxisSpRestResource {
@@ -82,6 +83,9 @@ public class TaxisSpRestResource {
         redirectUri.addParam(OAuth2Constants.REDIRECT_URI, ksTo.getClientRedirectUri());
         redirectUri.addParam(OAuth2Constants.STATE, ksTo.getState());
         redirectUri.addParam(OAuth2Constants.SCOPE, ksTo.getScope());
+        if (!StringUtils.isEmpty(ksTo.getNonce())) {
+            redirectUri.addParam("nonce", ksTo.getNonce());
+        }
         redirectUri.addParam("sessionId", sessionId);
         redirectUri.addParam("code", code);
         redirectUri.addParam("ip", URLEncoder.encode(httpServletRequest.getRemoteAddr(), StandardCharsets.UTF_8.toString()));

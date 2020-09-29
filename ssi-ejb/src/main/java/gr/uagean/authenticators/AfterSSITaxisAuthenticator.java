@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gr.uaegean.pojo.VerifiableCredential;
 import gr.uaegean.singleton.MemcacheSingleton;
+import static gr.uaegean.utils.CredentialsUtils.getClaimsFromVerifiedArray;
 import java.io.IOException;
 import net.spy.memcached.MemcachedClient;
 import org.keycloak.OAuth2Constants;
@@ -59,13 +60,14 @@ public class AfterSSITaxisAuthenticator implements Authenticator {
 
             ObjectMapper mapper = new ObjectMapper()
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            VerifiableCredential vc = mapper.readValue(claims, VerifiableCredential.class);
+            VerifiableCredential credential = mapper.readValue(claims, VerifiableCredential.class);
+            VerifiableCredential.VerifiedClaims vc = getClaimsFromVerifiedArray(credential);
 
             // since we are not storing the users we use as a username the did
-            UserModel user = KeycloakModelUtils.findUserByNameOrEmail(session, realm, vc.getDid());
+            UserModel user = KeycloakModelUtils.findUserByNameOrEmail(session, realm, credential.getDid());
             if (user == null) {
                 // since we are not storing the users we use as a username the did
-                user = session.users().addUser(realm, vc.getDid());
+                user = session.users().addUser(realm, credential.getDid());
             }
             user.setEnabled(true);
 
@@ -91,7 +93,8 @@ public class AfterSSITaxisAuthenticator implements Authenticator {
                 user.setSingleAttribute("taxis-dateOfBirth", vc.getTaxisRoute().getTaxis().getDateOfBirth());
                 user.setSingleAttribute("taxis-gender", vc.getTaxisRoute().getTaxis().getGender());
                 user.setSingleAttribute("taxis-nationality", vc.getTaxisRoute().getTaxis().getNationality());
-                user.setSingleAttribute("taxis-household", mapper.writeValueAsString(vc.getTaxisRoute().getTaxis().getHousehold()));
+                user.setSingleAttribute("taxis-credential-id", vc.getId());
+//                user.setSingleAttribute("taxis-household", mapper.writeValueAsString(vc.getTaxisRoute().getTaxis().getHousehold()));
                 if (vc.getTaxisRoute() != null && vc.getTaxisRoute().getTaxis() != null
                         && vc.getTaxisRoute().getTaxis().getAddress() != null) {
                     user.setSingleAttribute("taxis-address-street", vc.getTaxisRoute().getTaxis().getAddress().getStreet());
@@ -100,6 +103,8 @@ public class AfterSSITaxisAuthenticator implements Authenticator {
                     user.setSingleAttribute("taxis-address-prefecture", vc.getTaxisRoute().getTaxis().getAddress().getPrefecture());
                     user.setSingleAttribute("taxis-address-municipality", vc.getTaxisRoute().getTaxis().getAddress().getMunicipality());
                 }
+                user.setSingleAttribute("iat", credential.getVerified()[0].getIat());
+                user.setSingleAttribute("exp", credential.getVerified()[0].getExp());
 
             }
 

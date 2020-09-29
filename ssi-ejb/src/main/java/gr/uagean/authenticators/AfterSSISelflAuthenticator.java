@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gr.uaegean.pojo.VerifiableCredential;
 import gr.uaegean.singleton.MemcacheSingleton;
+import static gr.uaegean.utils.CredentialsUtils.getClaimsFromVerifiedArray;
 import java.io.IOException;
 import net.spy.memcached.MemcachedClient;
 import org.keycloak.OAuth2Constants;
@@ -59,20 +60,21 @@ public class AfterSSISelflAuthenticator implements Authenticator {
 
             ObjectMapper mapper = new ObjectMapper()
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            VerifiableCredential vc = mapper.readValue(claims, VerifiableCredential.class);
+            VerifiableCredential credential = mapper.readValue(claims, VerifiableCredential.class);
+            VerifiableCredential.VerifiedClaims vc = getClaimsFromVerifiedArray(credential);
 
             // since we are not storing the users we use as a username the did
-            UserModel user = KeycloakModelUtils.findUserByNameOrEmail(session, realm, vc.getDid());
+            UserModel user = KeycloakModelUtils.findUserByNameOrEmail(session, realm, credential.getDid());
             if (user == null) {
                 // since we are not storing the users we use as a username the did
-                user = session.users().addUser(realm, vc.getDid());
+                user = session.users().addUser(realm, credential.getDid());
             }
             user.setEnabled(true);
 
             if (vc.getSelf() != null && vc.getSelf().getSelf() != null) {
                 user.setFirstName(vc.getSelf().getSelf().getOaedid());
                 user.setLastName(vc.getSelf().getSelf().getOaedid());
-                user.setEmail(vc.getDid() + "@uport");
+                user.setEmail(credential.getDid() + "@uport");
                 user.setEmailVerified(true);
 
                 user.setSingleAttribute("self-hospitalized", vc.getSelf().getSelf().getHospitalized());
@@ -85,6 +87,9 @@ public class AfterSSISelflAuthenticator implements Authenticator {
                 user.setSingleAttribute("self-oaedDate", vc.getSelf().getSelf().getOaedDate());
                 user.setSingleAttribute("self-participateFead", vc.getSelf().getSelf().getParticipateFead());
                 user.setSingleAttribute("self-feadProvider", vc.getSelf().getSelf().getFeadProvider());
+                user.setSingleAttribute("credential-id", vc.getId());
+                user.setSingleAttribute("iat", credential.getVerified()[0].getIat());
+                user.setSingleAttribute("exp", credential.getVerified()[0].getExp());
 
             }
 

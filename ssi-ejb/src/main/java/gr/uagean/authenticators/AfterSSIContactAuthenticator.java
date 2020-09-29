@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gr.uaegean.pojo.VerifiableCredential;
 import gr.uaegean.singleton.MemcacheSingleton;
+import static gr.uaegean.utils.CredentialsUtils.getClaimsFromVerifiedArray;
 import java.io.IOException;
 import net.spy.memcached.MemcachedClient;
 import org.keycloak.OAuth2Constants;
@@ -59,23 +60,27 @@ public class AfterSSIContactAuthenticator implements Authenticator {
 
             ObjectMapper mapper = new ObjectMapper()
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            VerifiableCredential vc = mapper.readValue(claims, VerifiableCredential.class);
+            VerifiableCredential credential = mapper.readValue(claims, VerifiableCredential.class);
+            VerifiableCredential.VerifiedClaims vc = getClaimsFromVerifiedArray(credential);
 
             // since we are not storing the users we use as a username the did
-            UserModel user = KeycloakModelUtils.findUserByNameOrEmail(session, realm, vc.getDid());
+            UserModel user = KeycloakModelUtils.findUserByNameOrEmail(session, realm, credential.getDid());
             if (user == null) {
                 // since we are not storing the users we use as a username the did
-                user = session.users().addUser(realm, vc.getDid());
+                user = session.users().addUser(realm, credential.getDid());
             }
             user.setEnabled(true);
 
             if (vc.getContact() != null && vc.getContact().getContact() != null) {
-                user.setEmail(vc.getDid() + "@uport");
+                user.setEmail(credential.getDid() + "@uport");
                 user.setEmailVerified(true);
                 user.setSingleAttribute("email", vc.getContact().getContact().getEmail());
                 user.setSingleAttribute("iban", vc.getContact().getContact().getIban());
                 user.setSingleAttribute("landline", vc.getContact().getContact().getLandline());
                 user.setSingleAttribute("mobilePhone", vc.getContact().getContact().getMobilePhone());
+                user.setSingleAttribute("contact-credential-id", vc.getId());
+                user.setSingleAttribute("iat", credential.getVerified()[0].getIat());
+                user.setSingleAttribute("exp", credential.getVerified()[0].getExp());
 
             }
 

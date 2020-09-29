@@ -34,3 +34,7 @@ gr.uagean.authenticators.AfterEidasAuthenticatorFactory
 
 gr.uagean.authenticators.BeforeTaxisAuthenticatorFactory
 gr.uagean.authenticators.AfterTaxisAuthenticatorFactory
+
+
+gr.uagean.authenticators.BeforeGrnetEidasAuthenticatorFactory
+gr.uagean.authenticators.AfterGrnetEidasAuthenticatorFactory

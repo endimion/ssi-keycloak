@@ -6,11 +6,21 @@
 package gr.uaegean.pojo;
 
 import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  *
  * @author nikos
  */
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class KeycloakSessionTO implements Serializable {
 
     /*
@@ -27,80 +37,6 @@ public class KeycloakSessionTO implements Serializable {
     private String state;
     private String scope;
     private String realm;
-
-    public KeycloakSessionTO() {
-    }
-
-    public KeycloakSessionTO(String session, String responseType, String clientId, String clientRedirectUri,
-            String state, String scope, String realm) {
-        this.session = session;
-        this.responseType = responseType;
-        this.clientId = clientId;
-        this.clientRedirectUri = clientRedirectUri;
-        this.state = state;
-        this.scope = scope;
-        this.realm = realm;
-    }
-
-    public String getSession() {
-        return session;
-    }
-
-    public void setSession(String session) {
-        this.session = session;
-    }
-
-    public String getResponseType() {
-        return responseType;
-    }
-
-    public void setResponseType(String responseType) {
-        this.responseType = responseType;
-    }
-
-    public String getClientId() {
-        return clientId;
-    }
-
-    public void setClientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public String getClientRedirectUri() {
-        return clientRedirectUri;
-    }
-
-    public void setClientRedirectUri(String clientRedirectUri) {
-        this.clientRedirectUri = clientRedirectUri;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
-    }
-
-    public String getScope() {
-        return scope;
-    }
-
-    public void setScope(String scope) {
-        this.scope = scope;
-    }
-
-    public String getRealm() {
-        return realm;
-    }
-
-    public void setRealm(String realm) {
-        this.realm = realm;
-    }
-
-    @Override
-    public String toString() {
-        return "KeycloakSessionTO{" + "session=" + session + ", responseType=" + responseType + ", clientId=" + clientId + ", clientRedirectUri=" + clientRedirectUri + ", state=" + state + ", scope=" + scope + ", realm=" + realm + '}';
-    }
+    private String nonce;
 
 }

@@ -71,10 +71,11 @@ public class BeforeTaxisAuthenticator extends AbstractTaxisAuthenticator {
             String redirect_uri = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.REDIRECT_URI);
             String state = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.STATE);
             String scope = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.SCOPE);
+            String nonce = context.getHttpRequest().getUri().getQueryParameters().getFirst("nonce");
             int expiresInSec = 300;
             //Transfer Object that will be cached
             KeycloakSessionTO ksTO = new KeycloakSessionTO(state, response_type,
-                    client_id, redirect_uri, state, scope, null);
+                    client_id, redirect_uri, state, scope, null, nonce);
             mcc.add(sessionId, expiresInSec, ksTO);
             // storing the hash of the sessionId as that will be sent back after the auathentication (as the session with the taxis service)
             // this way the actuall sessionId can be retrieved from the received hash

@@ -29,6 +29,12 @@ public class VerifiableCredential {
      */
     private String did;
 
+    @JsonProperty("verified")
+    private Verified[] verified;
+
+    @JsonProperty("invalid")
+    private Verified[] invalid;
+
     @JsonProperty("TAXIS")
     private TaxisRoute taxisRoute;
 
@@ -60,10 +66,68 @@ public class VerifiableCredential {
     @Setter
     @NoArgsConstructor
     @ToString
+    public static class Verified {
+
+        private String id;
+
+        private String iat;
+        private String exp;
+        private String sub;
+        private String[] vc;
+        private String iss;
+        private String jwt;
+
+        @JsonProperty("claim")
+        private VerifiedClaims claims;
+
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    public static class VerifiedClaims {
+
+        @JsonProperty("TAXIS")
+        private TaxisRoute taxisRoute;
+
+        @JsonProperty("SEAL-EIDAS")
+        private SealEidas sealEidas;
+
+        @JsonProperty("AMKA")
+        private AMKA amka;
+
+        @JsonProperty("MITRO")
+        private MITRO mitro;
+
+        @JsonProperty("SEAL-isErasmusAegean")
+        private isErasmus erasmus;
+
+        @JsonProperty("SELF")
+        private SelfRoute self;
+
+        @JsonProperty("E1")
+        private E1Route e1;
+
+        @JsonProperty("EBILL")
+        private EBillRoute ebill;
+
+        @JsonProperty("CONTACT-DETAILS")
+        private ContactRoute contact;
+
+        private String id;
+
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
     public static class ContactRoute {
 
         @JsonProperty("contact")
         private ContactClaim contact;
+
     }
 
     @Getter
@@ -74,6 +138,9 @@ public class VerifiableCredential {
 
         @JsonProperty("ebill")
         private EBillClaim ebill;
+
+        private String id;
+
     }
 
     @Getter
@@ -84,6 +151,8 @@ public class VerifiableCredential {
 
         @JsonProperty("E1")
         private E1Claim e1;
+
+        private String id;
 
     }
 
@@ -96,6 +165,8 @@ public class VerifiableCredential {
         @JsonProperty("TAXIS")
         private TaxisClaim taxis;
 
+        private String id;
+
     }
 
     @Getter
@@ -105,6 +176,9 @@ public class VerifiableCredential {
     public static class SelfRoute {
 
         private SelfClaim self;
+
+        private String id;
+
     }
 
     @Getter
@@ -114,6 +188,9 @@ public class VerifiableCredential {
     public static class SealEidas {
 
         private EidasClaim eidas;
+
+        private String id;
+
     }
 
     @Getter
@@ -124,6 +201,9 @@ public class VerifiableCredential {
 
         @JsonProperty("AMKA")
         private AMKAClaim amka;
+
+        private String id;
+
     }
 
     @Getter
@@ -134,6 +214,9 @@ public class VerifiableCredential {
 
         @JsonProperty("eidas")
         private isErasmusClaim mitro;
+
+        private String id;
+
     }
 
     @Getter
@@ -144,6 +227,9 @@ public class VerifiableCredential {
 
         @JsonProperty("MITRO")
         private MITROClaim mitro;
+
+        private String id;
+
     }
 
     @Getter
@@ -175,31 +261,33 @@ public class VerifiableCredential {
     @ToString
     public static class E1Claim {
 
-        String salaries;
-        String pensionIncome;
-        String farmingActivity;
-        String freelanceActivity;
-        String rentIncome;
-        String unemploymentBenefit;
-        String otherBenefitsIncome;
-        String ekas;
-        String additionalIncomes;
-        String ergome;
-        String depositInterest;
-        String deposits;
-        String valueOfRealEstate;
-        String valueOfRealEstateInOtherCountries;
-        String valueOfOwnedVehicles;
-        String investments;
-        String householdComposition;
-        String name;
-        String surname;
-        String dateOfBirth;
-        String municipality;
-        String number;
-        String po;
-        String prefecture;
-        String street;
+        private String salaries;
+        private String pensionIncome;
+        private String farmingActivity;
+        private String freelanceActivity;
+        private String rentIncome;
+        private String unemploymentBenefit;
+        private String otherBenefitsIncome;
+        private String ekas;
+        private String additionalIncomes;
+        private String ergome;
+        private String depositInterest;
+        private String deposits;
+        private String valueOfRealEstate;
+        private String valueOfRealEstateInOtherCountries;
+        private String valueOfOwnedVehicles;
+        private String investments;
+//        private String householdComposition;
+        private String name;
+        private String surname;
+        private String dateOfBirth;
+        private String municipality;
+        private String number;
+        private String po;
+        private String prefecture;
+        private String street;
+        @JsonProperty("householdComposition")
+        private String household;
     }
 
     @Getter
@@ -258,9 +346,8 @@ public class VerifiableCredential {
         private String gender;
         private String nationality;
 
-        @JsonProperty("householdComposition")
-        private HouseholdComposition[] household;
-
+//        @JsonProperty("householdComposition")
+//        private HouseholdComposition[] household;
         @JsonProperty("address")
         private Address address;
 

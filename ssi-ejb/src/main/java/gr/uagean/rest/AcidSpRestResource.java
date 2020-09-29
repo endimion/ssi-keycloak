@@ -32,6 +32,7 @@ import org.keycloak.services.managers.AppAuthManager;
 import org.keycloak.services.managers.AuthenticationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 @ApplicationScoped
 public class AcidSpRestResource {
@@ -127,6 +128,9 @@ public class AcidSpRestResource {
         redirectUri.addParam(OAuth2Constants.REDIRECT_URI, ksTo.getClientRedirectUri());
         redirectUri.addParam(OAuth2Constants.STATE, ksTo.getState());
         redirectUri.addParam(OAuth2Constants.SCOPE, ksTo.getScope());
+        if (!StringUtils.isEmpty(ksTo.getNonce())) {
+            redirectUri.addParam("nonce", ksTo.getNonce());
+        }
 
         ObjectMapper mapper = new ObjectMapper();
 

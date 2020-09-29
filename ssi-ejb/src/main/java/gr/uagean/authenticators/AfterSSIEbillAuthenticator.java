@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gr.uaegean.pojo.VerifiableCredential;
 import gr.uaegean.singleton.MemcacheSingleton;
+import static gr.uaegean.utils.CredentialsUtils.getClaimsFromVerifiedArray;
 import java.io.IOException;
 import net.spy.memcached.MemcachedClient;
 import org.keycloak.OAuth2Constants;
@@ -59,13 +60,14 @@ public class AfterSSIEbillAuthenticator implements Authenticator {
 
             ObjectMapper mapper = new ObjectMapper()
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            VerifiableCredential vc = mapper.readValue(claims, VerifiableCredential.class);
+            VerifiableCredential credential = mapper.readValue(claims, VerifiableCredential.class);
+            VerifiableCredential.VerifiedClaims vc = getClaimsFromVerifiedArray(credential);
 
             // since we are not storing the users we use as a username the did
-            UserModel user = KeycloakModelUtils.findUserByNameOrEmail(session, realm, vc.getDid());
+            UserModel user = KeycloakModelUtils.findUserByNameOrEmail(session, realm, credential.getDid());
             if (user == null) {
                 // since we are not storing the users we use as a username the did
-                user = session.users().addUser(realm, vc.getDid());
+                user = session.users().addUser(realm, credential.getDid());
             }
             user.setEnabled(true);
 
@@ -83,6 +85,9 @@ public class AfterSSIEbillAuthenticator implements Authenticator {
                 user.setSingleAttribute("meterNumber", vc.getEbill().getEbill().getMeterNumber());
                 user.setSingleAttribute("supplyType", vc.getEbill().getEbill().getSupplyType());
                 user.setSingleAttribute("ownership", vc.getEbill().getEbill().getOwnership());
+                user.setSingleAttribute("ebill-credential-id", vc.getId());
+                user.setSingleAttribute("iat", credential.getVerified()[0].getIat());
+                user.setSingleAttribute("exp", credential.getVerified()[0].getExp());
             }
 
             // grab oidc params

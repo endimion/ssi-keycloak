@@ -67,13 +67,13 @@ public class BeforeEidasAuthenticator extends AbstractSSIAuthenticator {
             String redirect_uri = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.REDIRECT_URI);
             String state = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.STATE);
             String scope = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.SCOPE);
-
+            String nonce = context.getHttpRequest().getUri().getQueryParameters().getFirst("nonce");
             String usersCountry = context.getHttpRequest().getUri().getQueryParameters().getFirst("country");
 
             int expiresInSec = 300;
 
             //Transfer Object that will be cached
-            KeycloakSessionTO ksTO = new KeycloakSessionTO(state, response_type, client_id, redirect_uri, state, scope, "test");
+            KeycloakSessionTO ksTO = new KeycloakSessionTO(state, response_type, client_id, redirect_uri, state, scope, "test", nonce);
             LOG.info("will add with key:" + state + " object " + ksTO.toString());
             mcc.add(state, expiresInSec, ksTO);
 

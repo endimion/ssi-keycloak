@@ -70,12 +70,12 @@ public class BeforeSSIPersonalAuthenticator extends AbstractSSIAuthenticator {
             String state = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.STATE);
             String scope = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.SCOPE);
             String realm = StringUtils.isEmpty(this.propServ.getProp("PERSONAL_REALM")) ? "SSI-Personal" : this.propServ.getProp("PERSONAL_REALM");
-
+            String nonce = context.getHttpRequest().getUri().getQueryParameters().getFirst("nonce");
             int expiresInSec = 3000;
             // create a new sessionId
             String ssiSessionId = UUID.randomUUID().toString();
             //Transfer Object that will be cached
-            KeycloakSessionTO ksTO = new KeycloakSessionTO(state, response_type, client_id, redirect_uri, state, scope, realm);
+            KeycloakSessionTO ksTO = new KeycloakSessionTO(state, response_type, client_id, redirect_uri, state, scope, realm, nonce);
             LOG.info("BeforeSSIPersonalAuth will cache with key: " + ssiSessionId + " object " + ksTO.toString());
             this.mcc.add(ssiSessionId, expiresInSec, ksTO);
 

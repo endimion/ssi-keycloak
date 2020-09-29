@@ -38,6 +38,7 @@ import org.keycloak.services.managers.AppAuthManager;
 import org.keycloak.services.managers.AuthenticationManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 @ApplicationScoped
@@ -74,6 +75,20 @@ public class SsiSpRestResource {
 
     }
 
+    /**
+     * POST to uPort SDK helper service @ /connectionResponse that service
+     * verifies the received JWT and responds to a second endpoint of the
+     * SsiSpResResource: / ssiResponse
+     *
+     * @param httpServletRequest
+     * @param httpServletResponse
+     * @param jwt
+     * @param ssiSessionId
+     * @return
+     * @throws URISyntaxException
+     * @throws JsonProcessingException
+     * @throws IOException
+     */
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
     @Path("uportResponse")
@@ -104,7 +119,11 @@ public class SsiSpRestResource {
         SSE_BROADCASTER.register(sseEventSink);
     }
 
-    //TODO parse claims!!!!
+    /**
+     * Receives the response from the uPort SDK helper, parses it and continues
+     * the OIDC flow
+     *
+     */
     @POST
     @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML, MediaType.TEXT_PLAIN, MediaType.APPLICATION_FORM_URLENCODED})
     @Path("ssiResponse")
@@ -115,7 +134,7 @@ public class SsiSpRestResource {
             @FormParam("sessionId") String sessionId) throws URISyntaxException, JsonProcessingException, IOException {
 
         LOG.info("ssiResponse reached");
-        LOG.info("claims" + vcClaims);
+        LOG.info("claims" + vcClaims); // strigified JSON
         LOG.info("sessionId" + sessionId);
 
         // received SessionID
@@ -172,6 +191,9 @@ public class SsiSpRestResource {
         redirectUri.addParam(OAuth2Constants.STATE, ksTo.getState());
         redirectUri.addParam(OAuth2Constants.SCOPE, ksTo.getScope());
         redirectUri.addParam("sessionId", sessionId);
+        if (!StringUtils.isEmpty(ksTo.getNonce())) {
+            redirectUri.addParam("nonce", ksTo.getNonce());
+        }
 
         ObjectMapper mapper = new ObjectMapper();
 

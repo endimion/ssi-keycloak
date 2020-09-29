@@ -77,6 +77,7 @@ public class BeforeSSIAuthenticator extends AbstractSSIAuthenticator {
             String redirect_uri = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.REDIRECT_URI);
             String state = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.STATE);
             String scope = context.getHttpRequest().getUri().getQueryParameters().getFirst(OAuth2Constants.SCOPE);
+            String nonce = context.getHttpRequest().getUri().getQueryParameters().getFirst("nonce");
 
             MultivaluedMap<String, String> params = context.getHttpRequest().getUri().getQueryParameters();
             params.forEach((key, value) -> {
@@ -85,7 +86,7 @@ public class BeforeSSIAuthenticator extends AbstractSSIAuthenticator {
 
             int expiresInSec = 300;
             //Transfer Object that will be cached
-            KeycloakSessionTO ksTO = new KeycloakSessionTO(state, response_type, client_id, redirect_uri, state, scope, realm.getName());
+            KeycloakSessionTO ksTO = new KeycloakSessionTO(state, response_type, client_id, redirect_uri, state, scope, realm.getName(), nonce);
             LOG.info("BeforeSSIAuth will cache with key:" + ssiSessionId + " object " + ksTO.toString());
             mcc.add(ssiSessionId, expiresInSec, ksTO);
 //            LOG.info("the client scope is ::" + scope);

@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gr.uaegean.pojo.VerifiableCredential;
 import gr.uaegean.singleton.MemcacheSingleton;
+import static gr.uaegean.utils.CredentialsUtils.getClaimsFromVerifiedArray;
 import java.io.IOException;
 import net.spy.memcached.MemcachedClient;
 import org.keycloak.OAuth2Constants;
@@ -59,20 +60,20 @@ public class AfterSSIMitroAuthenticator implements Authenticator {
 
             ObjectMapper mapper = new ObjectMapper()
                     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-            VerifiableCredential vc = mapper.readValue(claims, VerifiableCredential.class);
+            VerifiableCredential credential = mapper.readValue(claims, VerifiableCredential.class);
+            VerifiableCredential.VerifiedClaims vc = getClaimsFromVerifiedArray(credential);
 
             // since we are not storing the users we use as a username the did
-            UserModel user = KeycloakModelUtils.findUserByNameOrEmail(session, realm, vc.getDid());
+            UserModel user = KeycloakModelUtils.findUserByNameOrEmail(session, realm, credential.getDid());
             if (user == null) {
                 // since we are not storing the users we use as a username the did
-                user = session.users().addUser(realm, vc.getDid());
+                user = session.users().addUser(realm, credential.getDid());
             }
             user.setEnabled(true);
-
 //            LOG.info("got mitro parased to ");
 //            LOG.info(vc.getMitro().toString());
             if (vc.getMitro() != null && vc.getMitro().getMitro() != null) {
-                user.setEmail(vc.getDid() + "@uport");
+                user.setEmail(credential.getDid() + "@uport");
                 user.setSingleAttribute("mitro-parenthood", vc.getMitro().getMitro().getParenthood());
                 user.setSingleAttribute("mitro-custody", vc.getMitro().getMitro().getCustody());
                 user.setSingleAttribute("mitro-additionalAdults", vc.getMitro().getMitro().getProtectedMembers());
@@ -84,12 +85,14 @@ public class AfterSSIMitroAuthenticator implements Authenticator {
                 user.setSingleAttribute("nationality", vc.getMitro().getMitro().getNationality());
                 user.setSingleAttribute("maritalStatus", vc.getMitro().getMitro().getMaritalStatus());
                 user.setSingleAttribute("maritalStatus", vc.getMitro().getMitro().getMaritalStatus());
+                user.setSingleAttribute("iat", credential.getVerified()[0].getIat());
+                user.setSingleAttribute("exp", credential.getVerified()[0].getExp());
                 if (vc.getMitro().getMitro().getGender().equals("Άρρεν")) {
                     user.setSingleAttribute("gender", "male");
                 } else {
                     user.setSingleAttribute("gender", "female");
                 }
-
+                user.setSingleAttribute("mitro-credential-id", vc.getId());
                 //maritalStatus
             }
 
