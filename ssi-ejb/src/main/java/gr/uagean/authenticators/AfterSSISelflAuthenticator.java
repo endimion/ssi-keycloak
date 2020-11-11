@@ -90,6 +90,7 @@ public class AfterSSISelflAuthenticator implements Authenticator {
                 user.setSingleAttribute("credential-id", vc.getId());
                 user.setSingleAttribute("iat", credential.getVerified()[0].getIat());
                 user.setSingleAttribute("exp", credential.getVerified()[0].getExp());
+                user.setSingleAttribute("credential-name", "Disqualifying Information");
 
             }
 

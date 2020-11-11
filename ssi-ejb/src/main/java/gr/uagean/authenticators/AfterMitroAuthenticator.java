@@ -86,9 +86,10 @@ public class AfterMitroAuthenticator implements Authenticator {
                 user.setEmail(record.getEklspecialno() + "@mitro");
                 user.setEmailVerified(true);
                 if (record.getMarriagerank() != null) {
+                    int numOfMemebers = Integer.parseInt(minEduFamResp.getResult().getRecords()[0].getNumberOfFamilyMembers()) - 2;
                     user.setSingleAttribute("mitro-protectedMembers",
-                            String.valueOf(Integer.parseInt(minEduFamResp.getResult().getRecords()[0].getNumberOfFamilyMembers()) - 2));
-                    user.setSingleAttribute("mitro-parenthood", "false");
+                            String.valueOf(numOfMemebers));
+                    user.setSingleAttribute("mitro-parenthood", numOfMemebers > 0 ? "true" : "false");
                 } else {
                     if (Integer.parseInt(minEduFamResp.getResult().getRecords()[0].getNumberOfFamilyMembers()) - 1 > 0) {
                         user.setSingleAttribute("mitro-parenthood", "true");

@@ -88,6 +88,32 @@ public class AfterSSIAuthenticator implements Authenticator {
 
             }
 
+            if (vc.getEidasEdugain() != null && vc.getEidasEdugain().getEidas() != null
+                    && vc.getEidasEdugain().getEdugain() != null) {
+                user.setFirstName(vc.getEidasEdugain().getEidas().getGivenName());
+                user.setLastName(vc.getEidasEdugain().getEidas().getFamilyName());
+                user.setEmail(vc.getEidasEdugain().getEidas().getPersonIdentifier() + "@eidas-edugain-uport");
+                user.setEmailVerified(true);
+
+                user.setSingleAttribute("eidas-familyName", vc.getEidasEdugain().getEidas().getFamilyName());
+                user.setSingleAttribute("eidas-firstName", vc.getEidasEdugain().getEidas().getGivenName());
+                user.setSingleAttribute("eidas-dateOfBirth", vc.getEidasEdugain().getEidas().getDateOfBirth());
+                user.setSingleAttribute("eidas-personIdentifier", vc.getEidasEdugain().getEidas().getPersonIdentifier());
+                user.setSingleAttribute("eidas-loa", vc.getEidasEdugain().getEidas().getLoa());
+                user.setSingleAttribute("eidas-credential-id", vc.getId());
+
+                user.setSingleAttribute("edugain-mail", vc.getEidasEdugain().getEdugain().getMail());
+                user.setSingleAttribute("edugain-given_name", vc.getEidasEdugain().getEdugain().getGivenName());
+                user.setSingleAttribute("edugain-sn", vc.getEidasEdugain().getEdugain().getSn());
+                user.setSingleAttribute("edugain-display_name", vc.getEidasEdugain().getEdugain().getDisplayName());
+                user.setSingleAttribute("edugain-edu_person_entitlement", vc.getEidasEdugain().getEdugain().getEduPersonEntitlemenet());
+                user.setSingleAttribute("edugain-source", vc.getEidasEdugain().getEdugain().getSource());
+                user.setSingleAttribute("edugain-loa", vc.getEidasEdugain().getEdugain().getLoa());
+
+                user.setSingleAttribute("link-loa", vc.getEidasEdugain().getLinkLoa());
+
+            }
+
             if (vc.getAmka() != null && vc.getAmka().getAmka() != null) {
                 if (user.getFirstName() == null) {
                     user.setFirstName(vc.getAmka().getAmka().getLatinFirstName());

@@ -88,6 +88,7 @@ public class AfterSSIEbillAuthenticator implements Authenticator {
                 user.setSingleAttribute("ebill-credential-id", vc.getId());
                 user.setSingleAttribute("iat", credential.getVerified()[0].getIat());
                 user.setSingleAttribute("exp", credential.getVerified()[0].getExp());
+                user.setSingleAttribute("credential-name", "Electronic Bill Details");
             }
 
             // grab oidc params

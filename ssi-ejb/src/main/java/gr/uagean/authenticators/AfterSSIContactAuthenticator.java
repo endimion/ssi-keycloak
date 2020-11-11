@@ -81,6 +81,7 @@ public class AfterSSIContactAuthenticator implements Authenticator {
                 user.setSingleAttribute("contact-credential-id", vc.getId());
                 user.setSingleAttribute("iat", credential.getVerified()[0].getIat());
                 user.setSingleAttribute("exp", credential.getVerified()[0].getExp());
+                user.setSingleAttribute("credential-name", "Contact Details");
 
             }
 

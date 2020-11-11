@@ -41,6 +41,9 @@ public class VerifiableCredential {
     @JsonProperty("SEAL-EIDAS")
     private SealEidas sealEidas;
 
+    @JsonProperty("SEAL-EIDAS-EDUGAIN")
+    private SealEidasEdugain eidasEdugain;
+
     @JsonProperty("AMKA")
     private AMKA amka;
 
@@ -114,6 +117,9 @@ public class VerifiableCredential {
 
         @JsonProperty("CONTACT-DETAILS")
         private ContactRoute contact;
+
+        @JsonProperty("SEAL-EIDAS-EDUGAIN")
+        private SealEidasEdugain eidasEdugain;
 
         private String id;
 
@@ -189,6 +195,20 @@ public class VerifiableCredential {
 
         private EidasClaim eidas;
 
+        private String id;
+
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    public static class SealEidasEdugain {
+
+        private EidasClaim eidas;
+        private EdugainClaim edugain;
+        @JsonProperty("link_loa")
+        private String linkLoa;
         private String id;
 
     }
@@ -406,6 +426,26 @@ public class VerifiableCredential {
         private String personIdentifier;
         @JsonProperty("date_of_birth")
         private String dateOfBirth;
+        private String source;
+        private String loa;
+    }
+
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @ToString
+    public static class EdugainClaim {
+
+        @JsonProperty("mail")
+        private String mail;
+        @JsonProperty("givenName")
+        private String givenName;
+        @JsonProperty("sn")
+        private String sn;
+        @JsonProperty("displayName")
+        private String displayName;
+        @JsonProperty("eduPersonEntitlement")
+        private String eduPersonEntitlemenet;
         private String source;
         private String loa;
     }

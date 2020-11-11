@@ -74,7 +74,7 @@ public class AfterSSITaxisAuthenticator implements Authenticator {
             if (vc.getTaxisRoute() != null && vc.getTaxisRoute().getTaxis() != null) {
                 user.setFirstName(vc.getTaxisRoute().getTaxis().getFirstNameLatin());
                 user.setLastName(vc.getTaxisRoute().getTaxis().getLastNameLatin());
-                user.setEmail(vc.getTaxisRoute().getTaxis().getAfm() + "@uport");
+                user.setEmail(credential.getDid() + "@uport");
                 user.setEmailVerified(true);
 
                 LOG.info("THE VC OBJECT IS");
@@ -93,7 +93,6 @@ public class AfterSSITaxisAuthenticator implements Authenticator {
                 user.setSingleAttribute("taxis-dateOfBirth", vc.getTaxisRoute().getTaxis().getDateOfBirth());
                 user.setSingleAttribute("taxis-gender", vc.getTaxisRoute().getTaxis().getGender());
                 user.setSingleAttribute("taxis-nationality", vc.getTaxisRoute().getTaxis().getNationality());
-                user.setSingleAttribute("taxis-credential-id", vc.getId());
 //                user.setSingleAttribute("taxis-household", mapper.writeValueAsString(vc.getTaxisRoute().getTaxis().getHousehold()));
                 if (vc.getTaxisRoute() != null && vc.getTaxisRoute().getTaxis() != null
                         && vc.getTaxisRoute().getTaxis().getAddress() != null) {
@@ -103,8 +102,11 @@ public class AfterSSITaxisAuthenticator implements Authenticator {
                     user.setSingleAttribute("taxis-address-prefecture", vc.getTaxisRoute().getTaxis().getAddress().getPrefecture());
                     user.setSingleAttribute("taxis-address-municipality", vc.getTaxisRoute().getTaxis().getAddress().getMunicipality());
                 }
+
+                user.setSingleAttribute("taxis-credential-id", vc.getId());
                 user.setSingleAttribute("iat", credential.getVerified()[0].getIat());
                 user.setSingleAttribute("exp", credential.getVerified()[0].getExp());
+                user.setSingleAttribute("credential-name", "Taxis");
 
             }
 

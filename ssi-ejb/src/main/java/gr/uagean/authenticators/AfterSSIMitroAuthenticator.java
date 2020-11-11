@@ -87,6 +87,7 @@ public class AfterSSIMitroAuthenticator implements Authenticator {
                 user.setSingleAttribute("maritalStatus", vc.getMitro().getMitro().getMaritalStatus());
                 user.setSingleAttribute("iat", credential.getVerified()[0].getIat());
                 user.setSingleAttribute("exp", credential.getVerified()[0].getExp());
+                user.setSingleAttribute("credential-name", "Mitro Politon");
                 if (vc.getMitro().getMitro().getGender().equals("Άρρεν")) {
                     user.setSingleAttribute("gender", "male");
                 } else {

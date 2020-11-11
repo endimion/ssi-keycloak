@@ -106,6 +106,7 @@ public class AfterSSIFinancialAuthenticator implements Authenticator {
                 user.setSingleAttribute("e1-credential-id", vc.getId());
                 user.setSingleAttribute("iat", credential.getVerified()[0].getIat());
                 user.setSingleAttribute("exp", credential.getVerified()[0].getExp());
+                user.setSingleAttribute("credential-name", "Financial Information");
 
             }
 

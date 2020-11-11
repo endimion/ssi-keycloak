@@ -1,36 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b8c460ac-6663-41e9-8b14-178b2b212731" name="Default Changelist" comment="" />
+    <list default="true" id="b8c460ac-6663-41e9-8b14-178b2b212731" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ear/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ear/target/maven-archiver/pom.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ear/target/ssi-plugin.ear" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ear/target/ssi-plugin.ear" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ear/target/ssi-plugin/ssi-ejb.jar" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ear/target/ssi-plugin/ssi-ejb.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/src/main/java/gr/uagean/authenticators/AfterSSIContactAuthenticator.java" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/src/main/java/gr/uagean/authenticators/AfterSSIContactAuthenticator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/src/main/java/gr/uagean/authenticators/AfterSSIEbillAuthenticator.java" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/src/main/java/gr/uagean/authenticators/AfterSSIEbillAuthenticator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/src/main/java/gr/uagean/authenticators/AfterSSIFinancialAuthenticator.java" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/src/main/java/gr/uagean/authenticators/AfterSSIFinancialAuthenticator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/src/main/java/gr/uagean/authenticators/AfterSSIMitroAuthenticator.java" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/src/main/java/gr/uagean/authenticators/AfterSSIMitroAuthenticator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/src/main/java/gr/uagean/authenticators/AfterSSISelflAuthenticator.java" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/src/main/java/gr/uagean/authenticators/AfterSSISelflAuthenticator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/src/main/java/gr/uagean/authenticators/AfterSSITaxisAuthenticator.java" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/src/main/java/gr/uagean/authenticators/AfterSSITaxisAuthenticator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/src/test/java/TestEthereumService.java" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/src/test/java/TestEthereumService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/target/classes/gr/uagean/authenticators/AfterSSIContactAuthenticator.class" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/target/classes/gr/uagean/authenticators/AfterSSIContactAuthenticator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/target/classes/gr/uagean/authenticators/AfterSSIEbillAuthenticator.class" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/target/classes/gr/uagean/authenticators/AfterSSIEbillAuthenticator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/target/classes/gr/uagean/authenticators/AfterSSIFinancialAuthenticator.class" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/target/classes/gr/uagean/authenticators/AfterSSIFinancialAuthenticator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/target/classes/gr/uagean/authenticators/AfterSSIMitroAuthenticator.class" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/target/classes/gr/uagean/authenticators/AfterSSIMitroAuthenticator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/target/classes/gr/uagean/authenticators/AfterSSISelflAuthenticator.class" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/target/classes/gr/uagean/authenticators/AfterSSISelflAuthenticator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/target/classes/gr/uagean/authenticators/AfterSSITaxisAuthenticator.class" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/target/classes/gr/uagean/authenticators/AfterSSITaxisAuthenticator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/target/maven-archiver/pom.properties" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/target/maven-archiver/pom.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/target/ssi-ejb-0.1-SNAPSHOT.jar" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/target/ssi-ejb-0.1-SNAPSHOT.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/target/surefire-reports/TEST-TestClaimsMarshall.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/target/surefire-reports/TEST-TestClaimsMarshall.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/target/surefire-reports/TEST-TestEthereumService.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/target/surefire-reports/TEST-TestEthereumService.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/target/surefire-reports/TEST-TestREgex.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/target/surefire-reports/TEST-TestREgex.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/target/surefire-reports/TestClaimsMarshall.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/target/surefire-reports/TestClaimsMarshall.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/target/surefire-reports/TestEthereumService.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/target/surefire-reports/TestEthereumService.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/target/surefire-reports/TestREgex.txt" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/target/surefire-reports/TestREgex.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ssi-ejb/target/test-classes/TestEthereumService.class" beforeDir="false" afterPath="$PROJECT_DIR$/ssi-ejb/target/test-classes/TestEthereumService.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="ProjectId" id="1UkX3rvmSCghNlPCIbadt6hyhCV" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
-    <option name="showExcludedFiles" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
   </component>
-  <component name="ServiceViewManager">
-    <option name="viewStates">
-      <list>
-        <serviceView>
-          <treeState>
-            <expand />
-            <select />
-          </treeState>
-        </serviceView>
-      </list>
-    </option>
-  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -45,25 +65,9 @@
     <servers />
   </component>
   <component name="WindowStateProjectService">
-    <state x="453" y="211" width="1084" height="751" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1575901955642">
-      <screen x="70" y="27" width="1850" height="1053" />
+    <state x="779" y="311" width="424" height="491" key="FileChooserDialogImpl" timestamp="1601456194619">
+      <screen x="72" y="27" width="1848" height="1053" />
     </state>
-    <state x="453" y="211" width="1084" height="751" key="#com.intellij.execution.impl.EditConfigurationsDialog/70.27.1850.1053@70.27.1850.1053" timestamp="1575901955642" />
-    <state x="773" y="315" width="424" height="491" key="FileChooserDialogImpl" timestamp="1575901825434">
-      <screen x="70" y="27" width="1850" height="1053" />
-    </state>
-    <state x="773" y="315" width="424" height="491" key="FileChooserDialogImpl/70.27.1850.1053@70.27.1850.1053" timestamp="1575901825434" />
-    <state x="478" y="131" width="1024" height="852" key="SettingsEditor" timestamp="1575901863563">
-      <screen x="70" y="27" width="1850" height="1053" />
-    </state>
-    <state x="478" y="131" width="1024" height="852" key="SettingsEditor/70.27.1850.1053@70.27.1850.1053" timestamp="1575901863563" />
-    <state x="651" y="380" key="com.intellij.ide.util.TipDialog" timestamp="1575901394048">
-      <screen x="70" y="27" width="1850" height="1053" />
-    </state>
-    <state x="651" y="380" key="com.intellij.ide.util.TipDialog/70.27.1850.1053@70.27.1850.1053" timestamp="1575901394048" />
-    <state x="658" y="259" width="672" height="678" key="search.everywhere.popup" timestamp="1575901744616">
-      <screen x="70" y="27" width="1850" height="1053" />
-    </state>
-    <state x="658" y="259" width="672" height="678" key="search.everywhere.popup/70.27.1850.1053@70.27.1850.1053" timestamp="1575901744616" />
+    <state x="779" y="311" width="424" height="491" key="FileChooserDialogImpl/72.27.1848.1053@72.27.1848.1053" timestamp="1601456194619" />
   </component>
 </project>

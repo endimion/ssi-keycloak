@@ -39,7 +39,7 @@ public class EthereumServiceImpl implements EthereumService {
     private final TransactionManager txManager;
 
     public EthereumServiceImpl() {
-        this.web3 = Web3j.build(new HttpService("https://ropsten.infura.io/v3/691797f6957f45e7944535265a9c13a6"));
+        this.web3 = Web3j.build(new HttpService("https://ropsten.infura.io/v3/7f068d3f3ad94c0ca0070ea9ce366a93"));
         String password = null; // no encryption
         this.mnemonic = "heavy peace decline bean recall budget trigger video era trash also unveil";
         // Derivation path wanted: // m/44'/60'/0'/0 (this is used in ethereum, in
